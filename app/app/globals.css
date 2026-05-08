@@ -288,11 +288,147 @@ body {
 
 .modal-loading {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 12px;
   min-height: 400px;
   color: #a3a3a3;
   font-size: 1rem;
+  text-align: center;
+  padding: 24px;
+}
+
+.modal-loading-hint {
+  font-size: 13px;
+  color: #6b7280;
+  max-width: 320px;
+}
+
+.modal-error {
+  background: #1a1a1a;
+  border: 1px solid #3a2424;
+  border-radius: 12px;
+  padding: 28px;
+  color: #f5f5f5;
+}
+
+/* Feedback panel */
+.feedback-panel {
+  background: #ffffff;
+  color: #171717;
+  border-radius: 12px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .feedback-panel {
+    background: #161616;
+    color: #ededed;
+  }
+}
+
+.feedback-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.feedback-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+}
+
+.feedback-heading {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.feedback-body {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.feedback-details {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.feedback-details summary {
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 0;
+}
+
+.feedback-scores {
+  width: 100%;
+  margin-top: 8px;
+  border-collapse: collapse;
+}
+
+.feedback-scores td {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.feedback-scores td:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.feedback-scores-total td {
+  font-weight: 600;
+  border-bottom: none;
+  padding-top: 12px;
+}
+
+.feedback-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.feedback-button {
+  flex: 1;
+  padding: 12px 18px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.feedback-button:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+@media (prefers-color-scheme: dark) {
+  .feedback-button:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.feedback-button-primary {
+  background: var(--foreground);
+  color: var(--background);
+  border-color: var(--foreground);
+}
+
+.feedback-button-primary:hover {
+  opacity: 0.9;
+  background: var(--foreground);
 }
 
 @media (prefers-reduced-motion: reduce) {
