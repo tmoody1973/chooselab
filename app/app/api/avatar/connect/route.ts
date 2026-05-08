@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 }
 
 async function pollSessionUntilReady(sessionId: string) {
-  const TIMEOUT_MS = 30_000;
+  const TIMEOUT_MS = 90_000;
   const POLL_INTERVAL_MS = 1_000;
   const deadline = Date.now() + TIMEOUT_MS;
 
