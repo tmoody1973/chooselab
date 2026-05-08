@@ -3,109 +3,94 @@
 import { useCallback, useEffect, useState, Suspense } from 'react';
 import { AvatarCall } from '@runwayml/avatars-react';
 import '@runwayml/avatars-react/styles.css';
-
-interface AvatarConfig {
-  id: string;
-  name?: string;
-  imageUrl?: string;
-}
+import { SCENARIOS, type Scenario } from '@/lib/scenarios';
 
 interface SessionInfo {
   sessionId: string;
   sessionKey: string;
 }
 
-// To use a custom avatar, replace the id with your custom avatar ID.
-const MY_AVATAR: AvatarConfig = {
-  id: 'music-superstar',
-};
-
 export default function Home() {
-  const [avatar, setAvatar] = useState<AvatarConfig>(MY_AVATAR);
-  const [isOpen, setIsOpen] = useState(false);
+  const [activeScenario, setActiveScenario] = useState<Scenario | null>(null);
   const [session, setSession] = useState<SessionInfo | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
-  useEffect(() => {
-    if (MY_AVATAR.name && MY_AVATAR.imageUrl) {
-      return;
-    }
-    fetch(`/api/avatar/${MY_AVATAR.id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) return;
-        setAvatar((prev) => ({
-          ...prev,
-          name: prev.name ?? data.name,
-          imageUrl: prev.imageUrl ?? data.imageUrl,
-        }));
-      })
-      .catch(console.error);
-  }, []);
-
   const closeModal = useCallback(() => {
-    setIsOpen(false);
+    setActiveScenario(null);
     setSession(null);
     setIsCreating(false);
   }, []);
 
-  async function startCall() {
-    setIsOpen(true);
+  async function startCall(scenario: Scenario) {
+    setActiveScenario(scenario);
     setIsCreating(true);
+    setSession(null);
     try {
       const res = await fetch('/api/avatar/connect', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ avatarId: avatar.id }),
+        body: JSON.stringify({ avatarId: scenario.avatarId }),
       });
+      if (!res.ok) {
+        throw new Error(`Session create failed: ${res.status}`);
+      }
       setSession(await res.json());
     } catch (err) {
-      console.error(err);
+      console.error('Failed to start call:', err);
       setIsCreating(false);
     }
   }
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!activeScenario) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeModal();
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, closeModal]);
+  }, [activeScenario, closeModal]);
 
   return (
     <main className="page">
       <header className="header">
-        <h1 className="title">Runway Characters Demo</h1>
+        <h1 className="title">ScenarioLab</h1>
+        <p className="tagline">
+          Practice real-world conversations in low-stakes role-play.
+          Three scenarios, three voices, no judgment.
+        </p>
       </header>
 
       <div className="presets">
-        <button className="preset" onClick={startCall}>
-          {avatar.imageUrl ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
+        {SCENARIOS.map((scenario) => (
+          <button
+            key={scenario.id}
+            className="preset"
+            onClick={() => startCall(scenario)}
+            style={{ ['--accent' as string]: scenario.accentColor }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={avatar.imageUrl}
-              alt={avatar.name ?? 'Avatar'}
+              src={scenario.imageSrc}
+              alt={scenario.characterName}
               width={240}
               height={320}
               className="preset-avatar"
             />
-          ) : (
-            <div className="preset-avatar preset-avatar-placeholder" />
-          )}
-          <div className="preset-info">
-            <span className="preset-name">{avatar.name ?? 'Loading...'}</span>
-          </div>
-        </button>
+            <div className="preset-info">
+              <span className="preset-name">{scenario.title}</span>
+              <span className="preset-character">with {scenario.characterName}</span>
+              <p className="preset-setup">{scenario.setupLine}</p>
+            </div>
+          </button>
+        ))}
       </div>
 
-      {isOpen ? (
+      {activeScenario ? (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <span className="modal-title">
-                {avatar.name ?? 'Avatar'}
+                {activeScenario.title} · {activeScenario.characterName}
               </span>
               <button
                 className="modal-close"
@@ -118,16 +103,18 @@ export default function Home() {
             {session ? (
               <Suspense fallback={<div className="modal-loading">Connecting...</div>}>
                 <AvatarCall
-                  avatarId={avatar.id}
+                  avatarId={activeScenario.avatarId}
                   sessionId={session.sessionId}
                   sessionKey={session.sessionKey}
-                  avatarImageUrl={avatar.imageUrl}
+                  avatarImageUrl={activeScenario.imageSrc}
                   onEnd={closeModal}
-                  onError={console.error}
+                  onError={(err) => console.error('AvatarCall error:', err)}
                 />
               </Suspense>
             ) : isCreating ? (
-              <div className="modal-loading">Creating avatar session...</div>
+              <div className="modal-loading">
+                Creating session with {activeScenario.characterName}...
+              </div>
             ) : null}
           </div>
         </div>
