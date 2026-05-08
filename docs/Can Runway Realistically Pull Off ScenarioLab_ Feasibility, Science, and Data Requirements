@@ -1,0 +1,173 @@
+# Can Runway Realistically Pull Off ScenarioLab? Feasibility, Science, and Data Requirements
+
+Author: **Manus AI**  
+Date: May 8, 2026
+
+## Short verdict
+
+**Yes, Runway can realistically support a hackathon-grade ScenarioLab, but only if ScenarioLab is scoped correctly.** Runway is strongest as the **embodied media layer**: real-time role-play avatars, generated replay clips, visualized alternative responses, scene cards, narration, and emotionally legible practice environments. Runway should not be treated as the entire scientific or clinical engine. The evidence-based part of ScenarioLab must come from curated scenario design, validated learning objectives, rubrics, human review, neurodiversity-affirming safeguards, and outcome tracking.
+
+The right architecture is therefore not “Runway diagnoses social skills and teaches autism therapy.” The right architecture is: **an evidence-informed social rehearsal product that uses Runway to make practice embodied, contextual, and memorable.** The application’s own backend and evaluation layer should own scenario structure, scoring, consent, progress, and safety.
+
+| Capability | Can Runway do it? | What else we need |
+| --- | --- | --- |
+| Real-time embodied conversation with an avatar | **Likely yes**, via Runway Characters / `gwm1_avatars`. | Scenario scripts, guardrails, and tool-calling hooks. |
+| Generate replay clips or alternative social outcomes | **Yes**, via text/image-to-video models such as `gen4.5`. | Storyboard planner, prompt templates, and generated/reference scene frames. |
+| Create classroom, workplace, interview, clinic, or family-dinner practice settings | **Yes**, using image and video generation. | Curated scenario taxonomy and safe representation guidelines. |
+| Detect whether a user’s response was empathetic or appropriate | **Not primarily Runway.** | Separate LLM evaluator, rubric, and ideally expert-reviewed examples. |
+| Measure real social improvement | **No, not by itself.** | Pre/post measures, longitudinal tracking, user self-report, coach/clinician feedback, and careful study design. |
+| Provide autism intervention or clinical therapy | **No, not as a hackathon claim.** | Licensed clinical oversight, validation, privacy/security, IRB-style ethics if researched. |
+
+## What Runway should be responsible for
+
+Runway should be used for the parts of ScenarioLab that text-only social coaching cannot do well. The Stanford HAI Noora example shows the value of presenting structured empathy scenarios, asking users to identify emotional valence, and giving corrective feedback.[^1] ScenarioLab’s leap forward is to make that process **embodied**. Instead of only reading “I’m tired and it’s hard to concentrate,” the user sees and hears a realistic person, practices responding in the moment, then watches a generated replay that makes the social cue visible.
+
+Runway’s model table supports this kind of system because it includes **real-time avatars**, **video generation**, **image generation**, and **audio models**.[^2] The API usage guide also shows asynchronous task creation through the Node SDK, with image-to-video calls using `model`, `promptImage`, `promptText`, `ratio`, and `duration`, and output returned from a task lifecycle.[^3]
+
+| ScenarioLab feature | Runway role | Why this is compelling |
+| --- | --- | --- |
+| Practice partner | A Runway Character plays the coworker, classmate, parent, teacher, manager, interviewer, or friend. | Converts social practice from abstract text into real-time embodied rehearsal. |
+| Replay Lens | Runway generates a short video replay of “what happened,” “how they may have felt,” and “one alternative response.” | Makes social perspective-taking concrete and memorable. |
+| Scenario environments | Image/video generation creates workplace, school, clinic, customer-service, and family settings. | Helps users practice context-specific communication. |
+| Tone and narration | Audio models can provide recap voiceover, dubbing, and accessible versions. | Supports multimodal learning and localization. |
+| Agent interaction | Character tool calling can trigger cue prompts, evaluation, replay generation, and progress cards. | Demonstrates true agentic orchestration rather than a single media call.[^4] |
+
+## What Runway should not be responsible for
+
+The scientifically sensitive parts should not depend on raw generative output. The product needs a separate **evidence layer** that defines what skill is being practiced, how performance is evaluated, what feedback is appropriate, when the system should refuse or escalate, and what the user can reasonably infer from their progress.
+
+| Sensitive function | Why Runway alone is insufficient | Required external layer |
+| --- | --- | --- |
+| Scoring empathy or social appropriateness | Generative models may be inconsistent and may encode neurotypical assumptions. | Expert-reviewed rubric and LLM evaluator constrained to that rubric. |
+| Selecting difficulty | Users vary widely in preferences, goals, sensory tolerance, language, culture, and support needs. | Adaptive scenario planner with user control and consent. |
+| Claiming improvement | Short-term app performance is not the same as real-world generalization. | Outcome measures, longitudinal tracking, and optional human feedback. |
+| Handling distress, abuse, bullying, trauma, or self-harm disclosures | A media model is not a crisis system. | Safety policy, escalation resources, and clear non-clinical boundaries. |
+| Representing autism | Poor design could imply autistic users should mask, conform, or suppress identity. | Neurodiversity-affirming design, autistic co-designers, and social-validity review. |
+
+## The scientific foundation ScenarioLab needs
+
+ScenarioLab should borrow from established social-skills training principles without overclaiming. A 2025 systematic review and meta-analysis of social skills training for children with ASD reports **small to moderate effects**, notes improvements in social communication, reciprocity, and joint attention, and concludes that social skills training should be considered one component of a broader individualized plan rather than a standalone solution.[^5] That is exactly how ScenarioLab should be framed: **practice support**, not treatment replacement.
+
+The uploaded Frontiers in Psychiatry study is also useful because it emphasizes multimodal social signals, adaptive feedback, response latency, engagement retention, and dynamic intervention selection.[^6] For ScenarioLab, this translates into a practical design rule: the app should not just generate scenarios; it should **observe the interaction, choose the next micro-intervention, and adapt the difficulty**.
+
+| Evidence-informed principle | Product implication for ScenarioLab |
+| --- | --- |
+| **Explicit instruction** | The app should name the target skill before practice: emotional recognition, repair, asking a follow-up question, boundary-setting, or perspective-taking. |
+| **Modeling** | The Replay Lens should show an example of a supportive response, not merely tell the user what to do. |
+| **Role-play** | The core interaction should be a realistic conversation with an avatar, not a worksheet. |
+| **Feedback** | Feedback should be immediate, specific, and limited to one or two actionable suggestions. |
+| **Generalization** | Scenarios should vary across settings and people over time, but only after the user succeeds in simpler versions. |
+| **User choice** | Users should choose goals that matter to them, such as self-advocacy, conflict repair, interview practice, or making friends. |
+| **Social validity** | Autistic users and stakeholders should review whether goals, methods, and outcomes feel acceptable and useful. |
+| **Human-in-the-loop safety** | Caregivers, coaches, educators, or clinicians should be optional collaborators, not hidden authorities. |
+
+## The data we need
+
+ScenarioLab needs five classes of data. For the hackathon, the first two matter most. For a real product, all five matter.
+
+| Data class | Examples | Why it matters | Hackathon version |
+| --- | --- | --- | --- |
+| **1. Curated scenario data** | Setting, character role, opening line, emotional cue, hidden intent, target skill, difficulty, safe exits. | Prevents the app from improvising unsafe or low-quality social situations. | Build 10–20 expert-written scenario cards, demo 2–3. |
+| **2. Response rubric data** | What counts as acknowledging emotion, asking a follow-up, over-fixing, dismissing, escalating, or repairing. | Makes feedback consistent and teachable. | Build a JSON rubric and 30–50 example responses. |
+| **3. User preference and accessibility data** | Modality preferences, sensory intensity, reading level, conversation speed, topics to avoid, identity preferences. | Makes the tool neurodiversity-aware and user-controlled. | Simple onboarding form and per-session controls. |
+| **4. Progress and outcome data** | Cue accuracy, response latency, retry improvement, confidence rating, self-reported transfer, optional coach rating. | Supports adaptation and later validation. | Private progress card with no clinical claims. |
+| **5. Safety and social-validity data** | User ratings of acceptability, usefulness, discomfort, perceived respect, and whether scenarios felt realistic. | Ensures the system is not training masking or harmful conformity. | Post-session feedback: “Was this useful, respectful, realistic, too intense?” |
+
+## Minimum viable scenario schema
+
+The scenario library should be structured. The app should not ask an LLM to freely invent all scenarios on the fly. A good MVP can use JSON templates like this:
+
+```json
+{
+  "id": "workplace_empathy_001",
+  "domain": "workplace",
+  "target_skill": "empathetic_acknowledgment",
+  "difficulty": 1,
+  "setting": "break room after lunch",
+  "character_role": "coworker",
+  "opening_line": "I'm feeling really tired lately, and it's been hard to concentrate.",
+  "hidden_emotional_state": "overwhelmed and hoping to be heard",
+  "cue_type": "negative_emotion_vulnerability",
+  "success_criteria": [
+    "acknowledges emotional state",
+    "does not immediately minimize or dismiss",
+    "asks one gentle follow-up question",
+    "respects boundaries"
+  ],
+  "common_missteps": [
+    "jumps directly to advice",
+    "changes the topic",
+    "invalidates the feeling",
+    "makes it about self"
+  ],
+  "model_response_example": "That sounds really hard. Do you want to talk about what's been making it difficult, or would you rather just take a quiet minute?",
+  "safety_notes": [
+    "avoid crisis content",
+    "do not imply user is wrong for preferring a direct communication style"
+  ]
+}
+```
+
+## Evaluation rubric
+
+For a hackathon, the evaluator can be an LLM constrained by a rubric. For a real product, the rubric should be reviewed by autistic advisors, speech-language pathologists, psychologists, educators, and/or social-skills researchers. The goal is not to grade whether the user is “normal.” The goal is to help the user compare strategies for achieving **their chosen communication goal**.
+
+| Dimension | Example score | Notes |
+| --- | --- | --- |
+| Emotional cue recognition | 0–2 | Did the user identify whether the other person was positive, neutral, negative, ambiguous, or distressed? |
+| Acknowledgment | 0–2 | Did the response show that the user noticed the other person’s feeling or need? |
+| Curiosity / follow-up | 0–2 | Did the user ask a supportive question when appropriate? |
+| Boundary respect | 0–2 | Did the response avoid pressuring the other person to disclose more than they want? |
+| Self-advocacy | 0–2 | In self-advocacy scenarios, did the user express a need clearly and respectfully? |
+| Repair | 0–2 | If the response caused tension, did the user attempt clarification or repair? |
+| User-chosen style fit | 0–2 | Does the response match the user’s preferred directness, modality, and communication style? |
+
+This last dimension is crucial. ScenarioLab should not enforce a single neurotypical script. It should support multiple valid communication styles and teach users how different styles may be interpreted in different contexts.
+
+## Best-practice safeguards
+
+The biggest risk is not technical feasibility; it is **ethical framing**. ScenarioLab must avoid becoming a masking trainer. The safest framing is that the app helps users rehearse situations they personally care about, understand possible interpretations, and choose responses that match their goals.
+
+| Safeguard | Implementation |
+| --- | --- |
+| **Non-clinical positioning** | Say “practice tool” or “rehearsal studio,” not “therapy” or “treatment,” unless partnered with licensed professionals. |
+| **User agency** | Let users choose goals, skip scenarios, lower intensity, switch to text, or stop at any time. |
+| **Neurodiversity-affirming language** | Avoid “fixing,” “normalizing,” or “correcting autistic behavior.” Use “communication strategies,” “perspective-taking,” and “self-advocacy.” |
+| **Co-design** | Involve autistic users in scenario review, UI decisions, feedback tone, and success criteria. |
+| **Social validity checks** | Ask whether scenarios feel realistic, useful, respectful, and worth practicing. |
+| **Curated scenarios first** | Do not let open-ended generation create sensitive social scenarios without constraints. |
+| **Privacy by design** | Avoid storing raw audio/video unless necessary; provide deletion controls; make coach/caregiver sharing opt-in. |
+| **Escalation boundaries** | If users disclose abuse, crisis, or self-harm, the app should stop role-play and provide appropriate resources. |
+
+## A realistic hackathon MVP
+
+For the hackathon, build the version that proves the thesis without pretending to be clinically validated. The demo should use curated scenarios, transparent feedback, and generated media as a learning aid.
+
+| MVP feature | Required? | Reason |
+| --- | --- | --- |
+| Two curated scenarios | **Yes** | Shows quality and avoids unsafe improvisation. |
+| Runway Character role-play | **Yes** | This is the embodied front-stage experience. |
+| Cue classification checkpoint | **Yes** | Grounds the product in explicit social-cue practice. |
+| LLM rubric evaluator | **Yes** | Shows adaptive feedback and technical depth. |
+| Replay Lens generated by Runway | **Yes** | This is the winning differentiator. |
+| Progress card | **Yes** | Makes it feel like a product, not a one-off demo. |
+| Speech input | Optional | Nice but not necessary; text input is safer and faster. |
+| Facial-expression analysis | No | Too risky and scientifically fragile for a hackathon. |
+| Clinical outcome claims | No | Avoid until proper validation exists. |
+
+## What to say in the pitch
+
+The pitch should be honest and ambitious:
+
+> **ScenarioLab is an evidence-informed social rehearsal studio. It combines curated social-skills practice, adaptive feedback, and Runway-generated embodied replays so users can practice difficult conversations safely before they happen. We are not claiming clinical treatment. We are demonstrating how media agents can make communication practice more contextual, memorable, and user-controlled.**
+
+This framing should resonate with the hackathon criteria. It is creative because it uses media generation to visualize social nuance. It is technically deep because it chains a realtime avatar, tool calls, a structured scenario engine, evaluation, prompt planning, and generated replay clips. It has impact because many people want safer ways to practice difficult conversations, including autistic users, students, job seekers, healthcare workers, managers, and families.
+
+## References
+
+[^1]: [Stanford HAI — “An AI Social Coach Is Teaching Empathy to People with Autism”](https://hai.stanford.edu/news/an-ai-social-coach-is-teaching-empathy-to-people-with-autism)
+[^2]: [Runway API Docs — Available AI Models](https://docs.dev.runwayml.com/guides/models/)
+[^3]: [Runway API Docs — API Getting Started Guide](https://docs.dev.runwayml.com/guides/using-the-api/)
+[^4]: [Runway API Docs — Tool Calling Overview](https://docs.dev.runwayml.com/characters/tools/)
+[^5]: [Alahmari et al. — “Effectiveness of social skills training interventions for children with autism spectrum disorder: A systematic review and meta-analysis”](https://pmc.ncbi.nlm.nih.gov/articles/PMC11918677/)
+[^6]: Lan, L., Li, K., and Li, D. (2025). “Exploring the application of AI in the education of children with autism: a public health perspective.” *Frontiers in Psychiatry*, 15:1521926. User-provided PDF.

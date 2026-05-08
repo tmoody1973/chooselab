@@ -1,0 +1,106 @@
+# Runway API Hackathon Brainstorming Notes
+
+## Official hackathon page
+
+Source: https://runwayml.com/api-hackathon
+
+The Runway API Hackathon runs **May 8–11, 2026**, is virtual, and is powered by Modal. Submissions are due **Monday, May 11 at 9am ET**, with winners announced **Monday, May 18**. The stated goal is to build the best **agent / app / tool / creative workflow** with Runway’s API, with prizes up to **$25,000 cash** and API credits.
+
+The page emphasizes that submissions should go beyond single API calls. The organizers want systems that **create, manipulate, or orchestrate media using AI**, especially systems that **chain together creative decisions, respond to inputs, and produce something people actually want to use**. Suggested directions include autonomous agents that generate and iterate on video content based on a brief, natural-language tools for non-technical users to direct AI video production, automated real media production pipelines, and interactive apps built on the Runway Characters API.
+
+Judging criteria include **Creativity**, **Technical depth**, **Impact**, and **Polish**. The user specifically highlighted Creativity, Technical depth, and Impact, and wants ideas that exceed those criteria. A winning concept should therefore feel like an end-to-end product, not just a demo of model invocation.
+
+## Initial implications for ideation
+
+Strong ideas should likely include an agentic loop: intake user goal, reason about constraints/audience/media format, generate storyboard/assets/video, critique outputs, revise prompts/seeds/inputs, assemble deliverables, and expose a usable interface. The technical story should show multiple Runway endpoints or features orchestrated together rather than a single text-to-video request. The impact story should point to a real user group: teachers, journalists, civic organizers, local governments, nonprofits, small businesses, creators, families, museums, or game players.
+
+Potential directions to investigate through docs: available generation models, image/video capabilities, character APIs, input references, video-to-video, text-to-image, task lifecycle, rate limits, asset uploads, and examples of Runway Skills.
+
+
+## Runway API documentation home
+
+Source: https://docs.dev.runwayml.com/
+
+The Runway API is positioned as a way to bring Runway’s generative models into apps, products, platforms, and websites. The docs emphasize start-building material, API reference, go-live checklist, and **Runway Agent Skills**, which are relevant because the hackathon specifically rewards agent/app/tool/workflow systems rather than isolated generations.
+
+The documentation navigation exposes major areas: Get Started, Characters, Tool Calling, API Details, Usage & Billing, Sample Apps, Errors, and API Versions. The presence of **Characters**, **Tool Calling**, **Uploads**, **Inputs**, **Outputs**, and sample apps suggests strong hackathon concepts can combine generated video, image references, audio, conversational avatars, external tools, and end-to-end product interfaces.
+
+## Available models guide
+
+Source: https://docs.dev.runwayml.com/guides/models/
+
+Available model families include:
+
+| Capability | Models | Inputs | Outputs | Ideation implications |
+| --- | --- | --- | --- | --- |
+| Generate video | `gen4.5`, `gen4_turbo`, `gen4_aleph`, `act_two`, `veo3`, `veo3.1`, `veo3.1_fast` | Text, image, video plus text/image depending on model | Video | Multi-step agents can generate, animate, transform, localize, personalize, or iterate video scenes. |
+| Real-time | `gwm1_avatars` | Text conversation | Video + audio | Supports interactive character, tutor, guide, spokesperson, game NPC, or civic assistant experiences. |
+| Generate images | `gen4_image`, `gen4_image_turbo`, `gemini_image3_pro`, `gpt_image_2`, `gemini_2.5_flash` | Text/image references | Image | Useful for style boards, storyboards, reference frames, UI previews, thumbnails, and branching content. |
+| Generate audio | ElevenLabs models: multilingual TTS, text-to-sound, voice isolation, dubbing, speech-to-speech | Text or audio | Audio | Enables voiceover, localization, accessibility, sound design, and cleanup for production workflows. |
+
+Key design opportunity: winning concepts should orchestrate **video + image + audio + real-time avatar + agentic critique/revision**, where each model has a clear role in a pipeline.
+
+## API usage guide
+
+Source: https://docs.dev.runwayml.com/guides/using-the-api/
+
+The API examples use the `@runwayml/sdk` package and create generation tasks through SDK methods such as `client.imageToVideo.create(...).waitForTaskOutput()`. The guide demonstrates `gen4.5` image-to-video by passing `promptImage`, `promptText`, `ratio`, and `duration`; it also supports text-to-video by omitting `promptImage`. Inputs can be passed as external URLs or as base64 data URIs. This is important for hackathon design because a demo can take user-uploaded photos, scraped public-domain images, generated frames, civic data visualizations, or drawn sketches and animate them into video.
+
+## Gen-4.5 research / model positioning
+
+Source: https://runwayml.com/research/introducing-runway-gen-4.5
+
+The Gen-4.5 announcement positions it as a top-rated video generation model with strong motion quality, prompt adherence, visual fidelity, temporal consistency, and control. The page highlights complex multi-element scenes, detailed compositions, physical accuracy, expressive characters, photorealistic and non-photorealistic aesthetics, slice-of-life scenes, and cinematic shots. It says all existing control modes such as image-to-video, keyframes, and video-to-video are planned for Gen-4.5. For brainstorming, this suggests projects can win by using Gen-4.5 not merely for spectacle, but for precise, useful, emotionally engaging narrative clips in domains such as education, journalism, public service, safety training, games, or personalized storytelling.
+
+## Runway Characters
+
+Source: https://docs.dev.runwayml.com/characters/
+
+Runway Characters are custom conversational characters powered by GWM-1, described as Runway’s General World Model. They can be generated from a single image, photorealistic or animated, human or non-human, with control over voice, personality, knowledge, and actions; no fine-tuning is required. The docs explicitly list use cases including customer support, learning and development, brand experiences, and interactive characters such as game hosts, dungeon masters, companions, and contextual avatars.
+
+This capability is highly relevant to hackathon ideas because it supports a real-time user-facing agent layer. Strong concepts can combine a conversational Character with background media pipelines: for example, a tutor who explains a concept and simultaneously generates a visual simulation, or a civic assistant who reads a bill, answers questions, and produces shareable explainers.
+
+## Runway Character tool calling
+
+Source: https://docs.dev.runwayml.com/characters/tools/
+
+Tool calling allows a realtime Character to decide when to invoke a named function during a session. Characters can trigger UI changes, look up live data, or click elements on a page, which makes them capable of taking actions rather than only speaking. The docs describe a loop: user speaks, model analyzes intent, model emits a structured function call, a client-side or server-side tool executes, and the result is integrated into the Character’s natural response. Client tools can drive browser UI such as overlays, navigation, and page interactions; server tools can hit application servers and return results.
+
+This is an especially strong hackathon differentiator. A project can present an embodied agent that coordinates multiple actions: data retrieval, curriculum planning, storyboard generation, video generation, audio dubbing, translation, interactive branching, and publishing/export. It also allows the demo to be a coherent app rather than a batch generator.
+
+## Aleph prompting and video transformation capabilities
+
+Source: https://help.runwayml.com/hc/en-us/articles/43277392678803-Aleph-Prompting-Guide
+
+Aleph is positioned as a model for editing, transforming, and generating video from existing footage. The guide says Aleph can combine workflows in a single generation and recommends simple prompts built from an action verb plus a description, such as changing a video so it is underwater. It can use input images alongside input video to influence color, style, and lighting, with prompts such as changing the color of an object to match an image or relighting a video using an image reference.
+
+Documented transformation use cases include adding VFX, changing seasons and weather, controlling motion with simple animations, generating new camera angles, predicting next shots, relighting footage, replacing objects or subjects, removing objects or subjects, aging or de-aging subjects, recoloring objects, stylizing new scenes using footage, and removing backgrounds.
+
+This is particularly valuable for design and architecture ideas. A tool could take a phone video of a room, street, storefront, classroom, or public square and generate multiple design futures: daylight/night lighting, accessibility retrofits, climate-resilient streetscape, different facade materials, furniture layouts, emergency egress overlays, before/after renovation pitches, or planning-board explainer clips. The technical depth would come from chaining: capture/upload footage, agent diagnoses goals and constraints, uses image models to create references, uses Aleph to transform the video, uses Gen-4.5 for narrative scenes or future-state walkthroughs, uses audio for voiceover, and uses Characters for interactive critique.
+
+## Stanford HAI inspiration: AI social coach for empathy and autism
+
+Source: https://hai.stanford.edu/news/an-ai-social-coach-is-teaching-empathy-to-people-with-autism
+
+The Stanford HAI article describes **Noora**, a specialized chatbot helping individuals with autism spectrum disorder practice social skills on demand. It is motivated by a real accessibility gap: face-to-face clinical social-skills interventions can improve outcomes, but they are often costly or unavailable. Noora supports written or spoken one-on-one interactions and gives individualized guidance for social communication skills such as asking questions, giving compliments, responding empathetically, and related social scenarios.
+
+The article highlights a specific empathy training workflow. Noora presents a leading statement such as “I’m feeling really tired lately and it’s been so hard to concentrate,” asks the user to classify the emotional valence as positive, neutral, or negative, then asks for an empathic response. The system validates successful responses or provides gentle corrections when the response lacks empathy. Importantly, the team carefully curated prompts and a pool of 330 statements designed to elicit empathetic responses rather than letting the model generate all scenarios on the fly. The work also tested real-world transfer: after four weeks, 71 percent of participants improved their empathetic responses in the tool, and the experimental group improved by an average of 38 percent in post-intervention Zoom-call assessments compared with controls.
+
+Implications for Runway hackathon ideas: A media-centric successor could make social practice **embodied, contextual, and multimodal**. Instead of only text chat, a Runway Character could role-play realistic social scenarios with facial expressions, tone, and body language; generated video could replay alternative interpretations of a moment; image/video generation could create safe practice environments such as school, workplace, clinic, grocery store, job interview, or family dinner; audio models could support tone-of-voice feedback and multilingual access. The winning framing should be careful: not “curing autism,” but offering **accessible, consent-based, neurodiversity-aware practice and self-advocacy support** with human-in-the-loop safeguards, curated scenarios, and opt-in privacy.
+
+## Uploaded Frontiers in Psychiatry study: AI in education of children with autism
+
+Source: User-provided PDF: `fpsyt-15-1521926.pdf`. Citation visible in the PDF: Lan, L., Li, K., and Li, D. (2025), “Exploring the application of AI in the education of children with autism: a public health perspective,” *Frontiers in Psychiatry*, 15:1521926, DOI: 10.3389/fpsyt.2024.1521926.
+
+The study argues that children with Autism Spectrum Disorder often face challenges in initiating interactions, interpreting non-verbal cues, maintaining reciprocal exchanges, recognizing social cues, and responding in adaptive social situations. It frames social-skills support as a public health issue because traditional interventions such as Applied Behavior Analysis and Social Skills Training can be effective but require substantial human resources, long-term engagement, specialized expertise, and therefore have limited scalability.
+
+The authors propose a Public Health-Driven Transformer model that integrates multimodal signals, including text, audio, and facial cues, to provide real-time interpretation of social context and adaptive feedback. The model architecture emphasizes latent interaction-state representation, dynamic transition modeling, attention-based scoring of social cues, real-time reward/feedback mechanisms, and dynamic intervention selection. From a product-design perspective, the important principle is not the exact model architecture but the **adaptive loop**: observe multimodal social behavior, score relevant cues, choose the next intervention, adjust frequency/intensity, and track progress over time.
+
+The paper reports practical evaluation claims involving 30 children with ASD over eight weeks, including a 23.4 percent increase in social cue recognition and a 15.7 percent reduction in response latency. It also reports a comparison table in which the proposed PHDT model scored 89.8 percent on social cue recognition, 3.1 seconds response latency, 91.4 percent engagement retention, and 63.7 percent overall improvement, outperforming traditional intervention categories listed in the table. The study also explicitly notes deployment limitations: data collection quality, device variability, data loss, distribution bias across participants, real-time latency and computing constraints, storage/compute overhead for high-frequency multimodal feedback, and privacy/security concerns.
+
+Implications for the Runway hackathon: ScenarioLab should be framed as a **multimodal, adaptive social rehearsal agent** rather than simply a chatbot. It should include scenario selection, embodied role-play, social-cue recognition prompts, response-latency and engagement tracking, progressive difficulty, and privacy-preserving progress cards. The strongest Runway-specific contribution is a generated **Replay Lens** that visualizes ambiguous social moments from multiple perspectives. The ethical framing should emphasize accessibility, practice, consent, user-chosen goals, human-in-the-loop review, and non-clinical positioning unless supervised by qualified professionals.
+
+
+## Additional Runway technical notes for ScenarioLab and DesignCrit deep dive
+
+Reviewed current Runway model table and documentation on May 8, 2026. The models page lists video generation models including `gen4.5` for text/image-to-video, `gen4_turbo` for image-to-video, `gen4_aleph` for video plus text/image-to-video transformation, `act_two`, and Veo variants. It lists real-time `gwm1_avatars` with text conversation input and video/audio output, image models including `gen4_image`, `gen4_image_turbo`, `gemini_image3_pro`, `gpt_image_2`, and `gemini_2.5_flash`, plus audio models including multilingual TTS, text-to-sound, voice isolation, dubbing, and speech-to-speech. The getting-started guide shows the Node SDK pattern with `@runwayml/sdk`, a `RunwayML()` client, `imageToVideo.create({ model: 'gen4.5', promptImage, promptText, ratio, duration }).waitForTaskOutput()`, supports URL inputs and base64 data URI image inputs, and returns task output URLs. Characters documentation says Runway Characters can build conversational digital personas from a single image with voice, personality, knowledge, and actions, using `gwm1_avatars`. Tool calling allows Characters to invoke named functions during realtime sessions through client tools for UI actions and server tools for HTTP-style backend actions. Aleph documentation says prompts generally combine an action verb with a transformation description, and highlights transformations including add/remove/change/replace, relight, restyle, change weather/season, generate new camera angles, predict next shots, recolor objects, remove backgrounds, and use input images as visual references.

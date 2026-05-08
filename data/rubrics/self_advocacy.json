@@ -1,0 +1,134 @@
+{
+  "id": "self_advocacy_v1",
+  "version": "0.1.0",
+  "target_skill": "school_self_advocacy",
+  "scale_per_dimension": "0-2",
+  "max_total": 10,
+  "frameworks": [
+    {
+      "name": "I PLAN — The Self-Advocacy Strategy",
+      "citation": "Van Reusen, A. K., Bos, C. S., Schumaker, J. B., & Deshler, D. D. (2002, rev. 2007). The Self-Advocacy Strategy for Education and Transition Planning. Edge Enterprises. University of Kansas Center for Research on Learning.",
+      "url": "https://kucrl.ku.edu/self-advocacy-strategy",
+      "evidence_base": "Van Reusen & Bos (1994), Exceptional Children, 60(5), 466-475 — students trained in I PLAN got 86% of self-identified goals into their IEPs vs. 13% for controls.",
+      "rationale": "Provides structured Inventory → Provide → Listen → Ask → Name framework that maps to single-turn self-advocacy asks."
+    },
+    {
+      "name": "ASAN — Navigating College",
+      "citation": "Autistic Self Advocacy Network (2013). Navigating College: A Handbook on Self-Advocacy Written for Autistic Students from Autistic Adults.",
+      "url": "https://autisticadvocacy.org/wp-content/uploads/2014/01/NavcollFinal.pdf",
+      "rationale": "Written by autistic adults; emphasizes clear, direct disclosure of needs and concrete logistics over neurotypical social warmup. Governs tone scoring: clarity beats softening."
+    }
+  ],
+  "dimensions": [
+    {
+      "id": "D1",
+      "name": "Clarity of the Ask",
+      "framework_source": "I PLAN — Provide / Name",
+      "scoring": {
+        "0": { "label": "Missing", "criteria": "No specific request stated.", "example": "School's been rough lately." },
+        "1": { "label": "Implied/vague", "criteria": "Implied or vague request.", "example": "I might need some help with this paper." },
+        "2": { "label": "Concrete named ask", "criteria": "Concrete, named ask.", "example": "I need a 48-hour extension on the Tuesday paper." }
+      }
+    },
+    {
+      "id": "D2",
+      "name": "Contextual Reasoning",
+      "framework_source": "I PLAN — Inventory",
+      "scoring": {
+        "0": { "label": "No reason or only venting", "criteria": "No reason given, or only emotional venting.", "example": "I just can't." },
+        "1": { "label": "Reason vague", "criteria": "Reason present but vague.", "example": "Things have been hard." },
+        "2": { "label": "Specific cause linked to ask", "criteria": "Specific cause linked to the ask.", "example": "My ADHD meds were switched this week and focus has been wrecked. OR: I'm autistic and the fluorescent lights in 204 trigger sensory overload." }
+      }
+    },
+    {
+      "id": "D3",
+      "name": "Proposed Solution / Specificity",
+      "framework_source": "I PLAN — Name Your Goals",
+      "scoring": {
+        "0": { "label": "No proposal", "criteria": "No proposal — only a problem.", "example": "(stops at describing the problem)" },
+        "1": { "label": "Direction without detail", "criteria": "A direction but no detail.", "example": "Maybe more time?" },
+        "2": { "label": "Concrete proposal with parameters", "criteria": "Concrete proposal with parameters.", "example": "Can I submit Friday by 5pm instead of Wednesday?" }
+      }
+    },
+    {
+      "id": "D4",
+      "name": "Direct, Respectful Tone",
+      "framework_source": "ASAN affirming norm",
+      "scoring": {
+        "0": { "label": "Hostile / blaming", "criteria": "Hostile, demanding, or blaming.", "example": "You never explain assignments clearly." },
+        "1": { "label": "Buried under hedges", "criteria": "Clear but buried under hedges/apology.", "example": "I'm so so sorry to bother you, this is probably stupid, but…" },
+        "2": { "label": "Direct + respectful", "criteria": "Direct + respectful, with or without pleasantries.", "example": "Hi Dr. K — I need an accommodation for next week's exam. Here's why…" }
+      }
+    },
+    {
+      "id": "D5",
+      "name": "Confirmation / Follow-up",
+      "framework_source": "I PLAN — Listen & Respond, Ask Questions",
+      "scoring": {
+        "0": { "label": "No close", "criteria": "No close, no check for agreement.", "example": "(message ends after the ask with no confirmation request)" },
+        "1": { "label": "Intent stated, no confirmation", "criteria": "States intent but no confirmation request.", "example": "I'll just plan on Friday then." },
+        "2": { "label": "Asks for confirmation or next step", "criteria": "Asks for confirmation or next step.", "example": "Does Friday at 5 work, or should I email the disability office to formalize this?" }
+      }
+    }
+  ],
+  "worked_examples": {
+    "strong": [
+      {
+        "label": "S1 — strong, low-pleasantry (autistic-affirming)",
+        "response": "Dr. Patel, I need an extension on the Wednesday paper to Friday 5pm. I'm autistic and my routine was disrupted by a fire-alarm evacuation Monday night, which knocked out my work block. I can submit Friday. Does that work, or do I need to file through Disability Services?",
+        "scores": { "D1": 2, "D2": 2, "D3": 2, "D4": 2, "D5": 2 },
+        "total": 10,
+        "reasoning": "Hits D1, D2, D3, D5; D4 scores 2 because direct + respectful — no apology required."
+      },
+      {
+        "label": "S2 — strong, conventional",
+        "response": "Hi Professor Lee — could I get a 48-hour extension on the lab report? I had a migraine flare-up Sunday-Monday and lost my drafting time. I can have it in by Wednesday noon. Let me know if that works.",
+        "scores": { "D1": 2, "D2": 2, "D3": 2, "D4": 2, "D5": 2 },
+        "total": 10,
+        "reasoning": "Clear ask (D1), specific reason (D2), concrete proposal (D3), respectful and direct (D4), checks for agreement (D5)."
+      },
+      {
+        "label": "S3 — strong, accommodation request",
+        "response": "I'd like to take Thursday's exam in a quieter room. I have an ADHD diagnosis and the main hall's noise tanks my performance. My DRC letter is attached. Can we use room 112, or is there another option you'd prefer?",
+        "scores": { "D1": 2, "D2": 2, "D3": 2, "D4": 2, "D5": 2 },
+        "total": 10,
+        "reasoning": "All five dimensions present; offers an alternative."
+      }
+    ],
+    "weak": [
+      {
+        "label": "W1 — vague",
+        "response": "Hey, school's been a lot. Is there anything you can do?",
+        "scores": { "D1": 0, "D2": 1, "D3": 0, "D4": 1, "D5": 0 },
+        "total": 2,
+        "reasoning": "D1 missing (no ask), D2 vague, D3 missing."
+      },
+      {
+        "label": "W2 — over-hedged & apologetic",
+        "response": "I'm soooo sorry to bother you, I know you're busy and I feel terrible asking, but um, maybe possibly could there be any chance of like a little more time? Sorry again!!",
+        "scores": { "D1": 1, "D2": 0, "D3": 0, "D4": 1, "D5": 0 },
+        "total": 2,
+        "reasoning": "D1 partial (ask buried), D2 missing, D3 missing, D4 scores 1 (clarity drowned in hedges). Low score is for missing reason and specificity, NOT for lacking apology."
+      },
+      {
+        "label": "W3 — hostile/blaming",
+        "response": "This assignment was unclear and unfair. I shouldn't be penalized for your bad instructions.",
+        "scores": { "D1": 0, "D2": 1, "D3": 0, "D4": 0, "D5": 0 },
+        "total": 1,
+        "reasoning": "D1 implied complaint not request, D3 missing, D4 = 0 (blaming)."
+      }
+    ]
+  },
+  "do_not_score": [
+    "Absence of apology or apologetic framing — 'Sorry to bother you' adds nothing to D1-D5",
+    "Absence of social warmup or small talk — skipping 'Hope your weekend was good!' is not a deduction",
+    "Absence of softening/hedging language — 'just', 'maybe', 'kind of', 'a little' are not required and often hurt D1",
+    "Brevity — a 2-sentence direct ask that hits D1+D2+D3 outscores a 6-sentence padded one",
+    "Lack of eye-contact, tone-of-voice, or facial-expression performance — out of scope (text rubric)",
+    "Disclosure depth — user is NOT required to name a diagnosis. 'I have a documented disability and a DRC letter' satisfies D2 just as well as naming the condition",
+    "Neurotypical warmth markers (exclamation points, smiley emoji, 'hope you're well!') — their absence is neutral",
+    "Whether the request will be granted — we score the ask, not the outcome"
+  ],
+  "evaluator_directive": "If the evaluator finds itself wanting to deduct points for tone seemed cold or didn't apologize enough, it should re-check D4: D4 only deducts for hostility or blame, never for directness.",
+  "attribution": "School self-advocacy rubric grounded in the Self-Advocacy Strategy (I PLAN) — Van Reusen, Bos, Schumaker & Deshler (2002, rev. 2007), University of Kansas Center for Research on Learning — and tone-calibrated against ASAN's Navigating College: A Handbook on Self-Advocacy Written for Autistic Students from Autistic Adults (2013)."
+}

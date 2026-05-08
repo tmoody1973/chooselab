@@ -1,0 +1,65 @@
+{
+  "id": "interview_prep_001",
+  "version": "0.1.0",
+  "domain": "interview",
+  "target_skill": "interview_response_structure",
+  "rubric_id": "interview_v1",
+  "difficulty": 2,
+  "setting": "video interview, professional conference room background",
+  "character": {
+    "role": "interviewer",
+    "name": "Jordan Kim",
+    "tone": "professional, neutral, lightly curious — not warm, not cold",
+    "avatar_style": "realistic mid-career interviewer in business-casual attire",
+    "voice_direction": "speaks at a measured pace, asks the question once, waits without filling silence",
+    "boundaries": [
+      "stays in role as an interviewer, not a coach",
+      "asks the behavioral question once, then waits",
+      "if the candidate asks a clarifying question, answers it directly without judging",
+      "if the candidate gives a generality-only response, may follow up with 'Can you give me a specific example?' once",
+      "does not coach STAR structure to the candidate during the session"
+    ]
+  },
+  "opening_line": "Thanks for joining. Tell me about a time you handled a conflict at work.",
+  "hidden_emotional_state": "neutral; evaluating for concrete examples and structured thinking",
+  "cue_type": "vague_behavioral_question",
+  "user_role": "responder",
+  "interaction_pattern": "character_asks_question_user_answers",
+  "success_criteria": [
+    "asks a clarifying question OR explicitly states the interpretation being used (when prompt is genuinely vague)",
+    "covers all four STAR elements — Situation, Task, Action, Result — in any order",
+    "names a specific event, role, action, tool, or number",
+    "example clearly matches what was asked AND states an outcome"
+  ],
+  "common_missteps": [
+    "answering with generalities ('I'm a team player')",
+    "answering a different question than what was asked",
+    "telling a story with no concrete actions or outcome",
+    "missing 3+ STAR elements"
+  ],
+  "model_response_example": "Quick clarification — do you mean conflict over a decision, or interpersonal conflict? OK, decision conflict. Last quarter, our designer and I disagreed on the onboarding flow. I proposed running a 5-user test; we did, the data favored her version, we shipped it, retention rose 6%.",
+  "safety_notes": [
+    "do not require the candidate to disclose neurodivergence to score well",
+    "do not penalize literal/structured answers (e.g., explicitly labeling 'Situation:' / 'Task:' / 'Action:' / 'Result:')",
+    "do not penalize asking a clarifying question — score it as a strength on D1",
+    "do not penalize 'let me think' or pause requests",
+    "if user discloses crisis content, exit role-play with a safe-handoff message"
+  ],
+  "replay_lens_prompt_template": {
+    "model": "gen4_turbo",
+    "duration_seconds": 5,
+    "ratio": "1280:720",
+    "scene_intent": "show a clear, structured interview answer being delivered with concrete examples on a video call",
+    "prompt_text": "A professional video-call view. The candidate speaks calmly and clearly into the camera, gesturing once or twice with one hand to indicate sequence. The candidate's webcam window is well-lit with a clean background. The interviewer's window shows them listening, nodding once. Realistic, non-dramatic.",
+    "do_not": [
+      "do not show the candidate as nervous, fidgety, or struggling",
+      "do not show the interviewer as hostile or skeptical",
+      "do not depict identifiable real public figures"
+    ]
+  },
+  "evidence_basis": {
+    "rubric": "interview_v1",
+    "primary_frameworks": ["STAR / Past-Behavior Structured Interviewing (Campion, Pursell, & Brown, 1988)", "Levashina et al. 2014 meta-analysis", "Maras et al. 2021 — neurodiversity-affirming adaptations"],
+    "non_clinical_positioning": "This scenario is a non-clinical communication practice tool. It does not provide career or employment advice."
+  }
+}

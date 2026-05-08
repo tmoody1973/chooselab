@@ -1,0 +1,225 @@
+# ScenarioLab PRD, Personas, and Research Context
+
+Author: **Manus AI**  
+Date: May 8, 2026  
+Purpose: **Claude handoff package for continued research, brainstorming, and implementation planning**
+
+## 1. Executive summary
+
+**ScenarioLab** is an evidence-informed social rehearsal studio that helps users practice conversations through structured scenarios, embodied AI role-play, adaptive feedback, and generated replay clips. The product’s differentiated idea is not simply “an AI chatbot for social skills.” It is a **multimodal rehearsal system** that combines text, voice, visual prompts, optional symbol-style supports, role-play avatars, and short generated media artifacts to help users understand possible interpretations of a social moment, rehearse communication strategies, and choose responses that fit their own goals.
+
+The product should be framed as a **non-clinical practice and reflection tool**, not a diagnostic system or autism treatment. The strongest product claim is that ScenarioLab helps with **prediction, clarity, rehearsal, and recovery**. It should not try to normalize autistic people, train masking, or rank users against a neurotypical standard. Instead, the product should help users practice situations they personally care about, compare communication strategies, and build confidence in contexts such as school, work, interviews, self-advocacy, conflict repair, and emotional support.
+
+> **Core thesis:** ScenarioLab uses Runway as the embodied media layer and a separate evidence layer as the scientific control system. Runway makes scenarios visible, conversational, and memorable. ScenarioLab’s own structured scenario library, rubrics, safety rules, user profile, and progress layer keep the experience useful, respectful, and constrained.
+
+## 2. Product positioning
+
+ScenarioLab should sit at the intersection of social rehearsal, communication support, accessibility, education, and AI media generation. It can support autistic and neurodivergent users, but it should not be exclusively framed as “for autism” in a stigmatizing way. A more durable positioning is **communication rehearsal for moments that matter**, with strong accessibility and neurodiversity-aware defaults.
+
+| Positioning choice | Recommended wording | Avoid |
+| --- | --- | --- |
+| **Category** | Social rehearsal studio; communication practice environment; multimodal coaching companion. | Autism therapy app; clinical intervention; AI therapist. |
+| **Promise** | Practice conversations safely, understand possible interpretations, and choose strategies aligned with your goals. | Become normal; fix social deficits; cure autism; guarantee empathy. |
+| **Audience** | Neurodivergent adults, students, job seekers, educators, coaches, and anyone preparing for difficult conversations. | Only children; only parents; only clinicians. |
+| **Scientific stance** | Evidence-informed, scenario-based, user-controlled practice. | Clinically validated treatment without a study. |
+| **Hackathon stance** | Agentic media orchestration: embodied role-play, adaptive decisions, generated replays, and structured feedback. | Single API call that turns text into video. |
+
+## 3. Problem statement
+
+Many users need low-risk ways to rehearse social situations before they happen. A text-only chatbot can simulate dialogue, but it often lacks embodied cues, structured learning goals, sensory controls, safety boundaries, and scientific humility. Traditional social-skills worksheets can be structured, but they may feel abstract, static, infantilizing, or disconnected from real lived contexts. ScenarioLab solves this by combining **structured evidence-informed practice** with **embodied, replayable media**.
+
+The Stanford HAI article about Noora shows that AI social coaching can support structured empathy practice by presenting social scenarios, asking users to identify emotional valence, and providing corrective feedback.[^1] The user-provided Frontiers in Psychiatry study emphasizes multimodal signals, response latency, engagement, adaptive feedback, and dynamic intervention selection as important design considerations for AI-supported autism education.[^2] Recent user-provided research notes also emphasize that autism-focused AI agents should include multimodal interfaces, routine and regulation support, consent controls, data minimization, structured personal knowledge, and clear escalation boundaries rather than relying on an unconstrained generic chatbot.[^3]
+
+## 4. Product goals and non-goals
+
+ScenarioLab’s product goal is to provide **structured, opt-in communication rehearsal**. The system should help users practice one target skill at a time, receive feedback that is specific and non-shaming, and review a generated replay that makes the scenario easier to understand. The system should also allow users to control modality, intensity, privacy, and sharing.
+
+| Area | Goal | Non-goal |
+| --- | --- | --- |
+| **Learning** | Help users rehearse target communication strategies through explicit instruction, role-play, modeling, feedback, retry, and reflection. | Replace educators, therapists, speech-language pathologists, psychologists, or human coaches. |
+| **Autonomy** | Let users choose what they want to practice and how direct, visual, verbal, or intense the session should be. | Force a single “correct” communication style. |
+| **Media** | Use Runway to create embodied practice partners, scenario environments, replay clips, and accessible narrative summaries. | Treat generative media output as scientifically authoritative. |
+| **Safety** | Detect high-risk content, limit sensitive scenario generation, and route crisis/disclosure content away from role-play. | Handle crisis counseling or abuse response as a general-purpose chatbot. |
+| **Evidence** | Use curated scenario templates, rubrics, and social-validity feedback to ground the product. | Claim validated real-world improvement without longitudinal study design. |
+
+## 5. Product principles
+
+ScenarioLab should follow five principles. First, it should be **user-directed**: the user chooses the goal, intensity, modality, and whether to share anything. Second, it should be **structured before generative**: the model can fill in dialogue and media, but the scenario template, success criteria, and safety boundaries should be curated. Third, it should be **multimodal by default**: users should be able to engage through text, voice, visuals, captions, and possibly symbol-style supports in later versions. Fourth, it should be **explainable**: every piece of feedback should be tied to a visible rubric dimension. Fifth, it should be **privacy-preserving**: raw audio, video, and transcripts should be minimized, deletable, and never shared without explicit consent.
+
+| Principle | Product implication |
+| --- | --- |
+| **Prediction** | Show what will happen next, preview scenario intensity, and provide explicit target-skill framing. |
+| **Clarity** | Translate ambiguous cues, idioms, indirect language, or emotional signals into understandable alternatives. |
+| **Recovery** | Help users repair a difficult interaction rather than simply score a response as wrong. |
+| **Choice** | Provide multiple valid response styles, including direct communication and self-advocacy. |
+| **Dignity** | Avoid language that implies autistic traits are defects or that success means masking. |
+
+## 6. User personas
+
+### Persona A: Maya, autistic college student practicing self-advocacy and peer situations
+
+Maya is a 20-year-old autistic college student who often understands academic expectations but finds ambiguous social situations exhausting. She wants to practice asking a professor for clarification, responding when a roommate seems upset, and joining study-group conversations. She does not want a tool that tells her to act neurotypical. She wants a private place to understand possible interpretations, rehearse direct but respectful language, and prepare for conversations in her own style.
+
+| Field | Description |
+| --- | --- |
+| **Primary goal** | Practice social and academic conversations while maintaining autonomy and direct communication. |
+| **Needs** | Text mode, pause, replay, low-intensity visuals, clear rubrics, delete controls. |
+| **Jobs to be done** | “Help me rehearse what to say,” “Show me why someone might interpret this differently,” and “Give me a phrase I can adapt.” |
+| **Risks** | Feels judged, infantilized, surveilled, or pressured to mask. |
+| **Success** | Leaves with one strategy that fits her communication style and feels more prepared for a real conversation. |
+
+### Persona B: Jordan, neurodivergent job seeker preparing for interviews
+
+Jordan is a 27-year-old neurodivergent job seeker who wants to practice job interviews and first-week workplace interactions. He is anxious about ambiguous interviewer questions, indirect feedback, and moments when a coworker expresses stress. He wants short, practical sessions with immediate feedback and a replay he can review.
+
+| Field | Description |
+| --- | --- |
+| **Primary goal** | Improve confidence before interviews and workplace conversations. |
+| **Needs** | Workplace scenario library, professional tone, private progress summaries, retry loop. |
+| **Jobs to be done** | “Let me practice before the real conversation,” “Tell me one thing to improve,” and “Show a better version.” |
+| **Risks** | Feedback is too generic, culturally narrow, or framed as personality correction. |
+| **Success** | Completes a scenario, retries with a stronger response, and saves a concise strategy card. |
+
+### Persona C: Elena, school counselor or learning specialist
+
+Elena supports students with communication, self-advocacy, and transition planning. She wants tools students can use privately, but she also needs assurance that the product has safe language, consent-based sharing, and clear non-clinical boundaries. She may recommend a scenario but should not be able to secretly monitor the student.
+
+| Field | Description |
+| --- | --- |
+| **Primary goal** | Offer structured practice that complements human support. |
+| **Needs** | Reviewed scenario templates, opt-in sharing, audit-friendly summaries, safety boundaries. |
+| **Jobs to be done** | “Recommend a scenario,” “Review a student-approved summary,” and “Trust that the app is respectful.” |
+| **Risks** | Product creates liability, stores sensitive data, or overclaims effectiveness. |
+| **Success** | Student reports the scenario was useful, realistic, respectful, and not too intense. |
+
+### Persona D: Priya, manager practicing supportive conversations
+
+Priya manages a small team and wants to practice responding when a direct report is overwhelmed, burned out, or upset. She broadens ScenarioLab beyond autism-specific framing and demonstrates that communication rehearsal is useful for everyone. Her use case is especially helpful for the hackathon because it allows a non-clinical, emotionally legible demo.
+
+| Field | Description |
+| --- | --- |
+| **Primary goal** | Practice emotionally intelligent workplace responses. |
+| **Needs** | Short scenarios, leadership-specific feedback, alternative-response examples, privacy. |
+| **Jobs to be done** | “Help me avoid minimizing,” “Show me how to ask a supportive follow-up,” and “Let me practice before a 1:1.” |
+| **Risks** | Becomes generic HR training with no embodied or adaptive value. |
+| **Success** | Learns one concrete response pattern she can use in a real conversation. |
+
+### Persona E: Sam, autistic adult using ScenarioLab for independence and daily communication
+
+Sam is a 35-year-old autistic adult who lives independently and uses digital tools for routines, meeting notes, sensory planning, and social clarification. Sam values privacy and does not want caregivers to have default access. ScenarioLab could eventually support Sam through meeting summaries, post-conversation reflection, and scripts for asking for accommodations.
+
+| Field | Description |
+| --- | --- |
+| **Primary goal** | Use AI to improve clarity, planning, and communication without losing autonomy. |
+| **Needs** | Personal profile, event log, optional document memory, delete/export, no hidden sharing. |
+| **Jobs to be done** | “Summarize what happened,” “Help me prepare for tomorrow,” and “Remind me what works when I am overloaded.” |
+| **Risks** | Surveillance, caregiver override, privacy leakage, or medicalized framing. |
+| **Success** | Receives concrete support that reflects personal preferences and can be paused or deleted. |
+
+## 7. MVP user journeys
+
+The hackathon MVP should not attempt to build the entire autism-support agent described in the new research notes. Instead, it should use that research to strengthen a narrow social-practice loop. The MVP should prove that ScenarioLab can combine multimodal input, structured knowledge, Runway embodiment, feedback, replay, and privacy controls in one coherent agentic experience.
+
+| Step | User experience | Product behavior |
+| --- | --- | --- |
+| **1. Setup** | User chooses text or voice, feedback style, intensity level, and data retention preference. | Creates a lightweight `UserProfile` with privacy and accessibility defaults. |
+| **2. Goal choice** | User chooses “respond when someone seems overwhelmed” or “ask for an accommodation.” | Loads curated `ScenarioTemplate`, rubric, safety notes, and Runway character profile. |
+| **3. Preview** | App explains what skill will be practiced and what cues to watch for. | Shows explicit instruction, difficulty, and opt-out controls. |
+| **4. Role-play** | User interacts with an embodied AI character. | Runway Character delivers the scenario; orchestrator watches transcript and tool events. |
+| **5. Cue check** | User identifies the emotional or situational cue. | Evaluator records cue recognition and confidence. |
+| **6. Response** | User responds in text or voice. | LLM evaluator scores against a narrow rubric and selects one feedback point. |
+| **7. Replay Lens** | App generates a short clip showing the moment, likely interpretation, and one alternative response. | Replay Director turns session into storyboard and calls Runway video generation. |
+| **8. Retry** | User tries again with the same or slightly modified scenario. | Progress engine compares attempts and suggests one next step. |
+| **9. Reflection** | User rates whether scenario was useful, realistic, respectful, and appropriately intense. | Social-validity data updates scenario quality and safety review queue. |
+
+## 8. Functional requirements
+
+The requirements below reflect both the original ScenarioLab concept and the user’s latest research note that autism-focused AI agents need user-facing tools, safety/control tools, and a tightly scoped knowledge base.
+
+| ID | Requirement | Priority | Acceptance criteria |
+| --- | --- | --- | --- |
+| FR-001 | User can select modality: text, voice, visual prompts, or low-media mode. | P0 | At least text and visual prompts work in MVP; voice is optional if time permits. |
+| FR-002 | User can configure profile preferences. | P0 | App stores communication style, intensity, sensory preferences, topics to avoid, and retention preference. |
+| FR-003 | App loads scenario from curated template. | P0 | Template includes domain, character, opening line, target skill, hidden state, success criteria, and safety notes. |
+| FR-004 | App uses Runway Character or avatar layer for embodied role-play. | P0 | Character presents the scenario and remains within defined role and guardrails. |
+| FR-005 | App supports cue identification. | P0 | User can classify cue before or after responding. |
+| FR-006 | App evaluates response against structured rubric. | P0 | Feedback is specific, gentle, and tied to one visible rubric dimension. |
+| FR-007 | App generates Replay Lens artifact using Runway. | P0 | User receives a short visual replay or storyboarded generated clip. |
+| FR-008 | App supports retry and comparison. | P0 | User can attempt the scenario again and see one improvement note. |
+| FR-009 | App includes safety rules and escalation boundaries. | P0 | Crisis, abuse, self-harm, or severe distress language stops role-play and routes to safe resources or human support guidance. |
+| FR-010 | App provides privacy controls. | P0 | User can choose not to store transcripts and can delete session data. |
+| FR-011 | App includes social-validity feedback. | P1 | User rates usefulness, realism, respectfulness, and intensity after a session. |
+| FR-012 | App supports optional human-review summary. | P2 | User can explicitly export a summary for coach/counselor review without raw transcript by default. |
+
+## 9. Knowledge-base requirements
+
+ScenarioLab should not rely on a model “remembering everything.” It should use structured fields for stable user facts, an event log for session history, and a document store for optional support plans or user-provided notes. The latest user research explicitly argues for a hybrid approach: durable preferences such as “noise-canceling headphones help during grocery trips” should be stored differently from event-specific facts such as “had a hard time after a fire drill on Tuesday.”[^3]
+
+| Knowledge bucket | MVP contents | Future contents | Privacy stance |
+| --- | --- | --- | --- |
+| **Personal profile** | Communication preference, intensity preference, modality, topics to avoid. | Sensory triggers, interests, calming supports, preferred accommodations. | User-controlled; editable and deletable. |
+| **Scenario library** | 10–20 curated templates; demo 2–3. | Domain-specific libraries for school, work, healthcare, family, public spaces. | Product-owned; versioned. |
+| **Rubric library** | Empathy, self-advocacy, clarification, repair. | Age/culture/context-adapted rubrics reviewed by experts and autistic advisors. | Product-owned; auditable. |
+| **Event log** | Scenario attempted, rubric output, retry, user rating. | Longitudinal progress, confidence trends, optional coach notes. | Minimize raw transcript storage. |
+| **Document store** | Not required for hackathon. | Optional IEP, support plan, accommodation letter, coaching notes. | Explicit opt-in only; strong access controls. |
+| **Policy and guardrails** | Disallowed content, escalation rules, refusal templates. | Role-based policies for schools, clinics, caregivers, and employers. | Product-owned; human-reviewable. |
+
+## 10. Safety, privacy, and consent requirements
+
+ScenarioLab requires a clear safety model because autism-related AI tools can easily become surveillance systems or make inappropriate quasi-clinical claims. The product should use separate roles for autistic user, caregiver, educator, clinician, and admin. The default should be **user privacy**, not caregiver visibility. Sharing should be explicit, granular, and revocable.
+
+| Safety control | MVP implementation | Reason |
+| --- | --- | --- |
+| **Consent settings** | User chooses whether transcript is stored and whether summaries can be exported. | Prevents hidden monitoring. |
+| **Data minimization** | Store structured metrics by default; avoid raw audio/video unless needed. | Reduces privacy risk. |
+| **Deletion controls** | User can delete session transcript, generated media, and profile fields. | Supports autonomy and trust. |
+| **Explanation layer** | Feedback shows “why you are seeing this suggestion.” | Avoids opaque model authority. |
+| **Escalation rules** | Stop role-play for crisis, abuse, self-harm, or severe distress. | Keeps product within non-clinical boundaries. |
+| **Audit trail** | Log scenario version, rubric version, evaluator output, and generated-media prompt. | Supports debugging and responsible review. |
+| **Role permissions** | User, coach, caregiver, clinician, admin scopes separated. | Prevents inappropriate access. |
+
+## 11. Scenario taxonomy for v1 and v2
+
+The best v1 scenarios should be short, safe, emotionally legible, and useful to many people. Workplace empathy and self-advocacy are ideal because they avoid reducing ScenarioLab to “teaching autistic people to accommodate others.” They balance perspective-taking with the user’s right to express needs.
+
+| Domain | Scenario | Target skill | MVP fit |
+| --- | --- | --- | --- |
+| **Workplace** | Coworker says they are exhausted and cannot concentrate. | Acknowledgment and gentle follow-up. | Excellent. |
+| **School** | Student asks professor for deadline clarification or accommodation. | Self-advocacy and respectful directness. | Excellent. |
+| **Peer** | Roommate says, “You finally made it.” | Ambiguity detection and clarification. | Good but higher difficulty. |
+| **Interview** | Interviewer asks a vague behavioral question. | Clarifying question and structured answer. | Good. |
+| **Healthcare** | Patient tells receptionist they are overwhelmed by waiting-room noise. | Self-advocacy and accommodation request. | Strong but sensitive. |
+| **Family** | Relative makes indirect comment at dinner. | Boundary setting and repair. | Useful but culturally complex. |
+
+## 12. Evidence and validation plan
+
+ScenarioLab should begin with **social validity** rather than clinical claims. The first validation question is whether users find the scenarios useful, realistic, respectful, and not too intense. The second question is whether users can improve within the app on a narrow skill after one retry. A later pilot could measure confidence and real-world transfer, but that requires stronger study design.
+
+| Stage | Evaluation question | Data collected |
+| --- | --- | --- |
+| **Hackathon** | Does the product demo clearly show agentic media orchestration and respectful practice? | Completion, retry, generated replay, user rating. |
+| **Alpha test** | Do target users find the scenarios useful and respectful? | Social-validity ratings, interviews, qualitative feedback. |
+| **Pilot** | Do users report more confidence after practice? | Pre/post confidence, scenario-specific rubric improvement, retention. |
+| **Research study** | Does practice transfer to real-world interactions? | Validated measures, human ratings, longitudinal follow-up, ethics review. |
+
+## 13. Claude research and brainstorming tasks
+
+Claude should use this document as a starting point rather than a final answer. The next research pass should deepen the scientific foundation, especially around autistic adult users, participatory design, self-advocacy, privacy, AAC/multimodal communication, and social-validity measurement.
+
+| Workstream | Claude tasks |
+| --- | --- |
+| **Evidence base** | Research social-skills interventions, video modeling, role-play, self-advocacy training, and autistic adult communication support. |
+| **Participatory design** | Find sources on autistic co-design, neurodiversity-affirming language, and avoiding masking pressure. |
+| **Privacy** | Research role-based consent, data minimization, and risks of caregiver/teacher surveillance. |
+| **Rubrics** | Draft rubrics for empathy, self-advocacy, clarification, boundary setting, and repair. |
+| **Scenario library** | Create 20 structured scenario templates across school, work, healthcare, family, interviews, and civic interactions. |
+| **MVP strategy** | Decide whether the hackathon demo should focus on workplace empathy, school self-advocacy, or both. |
+| **Runway integration** | Map each Runway feature to a specific user-facing moment, not a generic media-generation call. |
+
+## References
+
+[^1]: [Stanford HAI — “An AI Social Coach Is Teaching Empathy to People with Autism”](https://hai.stanford.edu/news/an-ai-social-coach-is-teaching-empathy-to-people-with-autism)
+[^2]: Lan, L., Li, K., and Li, D. (2025). “Exploring the application of AI in the education of children with autism: a public health perspective.” *Frontiers in Psychiatry*, 15:1521926. User-provided PDF.
+[^3]: User-provided research notes in `/home/ubuntu/upload/pasted_content_3.txt`, citing sources on multimodal autism assistive systems, privacy, adult independence, AI social coaching, and structured knowledge-base design.
+[^4]: [Runway API Hackathon](https://runwayml.com/api-hackathon)
+[^5]: [Alahmari et al. — “Effectiveness of social skills training interventions for children with autism spectrum disorder: A systematic review and meta-analysis”](https://pmc.ncbi.nlm.nih.gov/articles/PMC11918677/)

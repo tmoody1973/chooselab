@@ -1,0 +1,399 @@
+# ScenarioLab Technical Architecture and Runway Integration Plan
+
+Author: **Manus AI**  
+Date: May 8, 2026  
+Purpose: **Technical handoff document for Claude, engineering research, and hackathon build planning**
+
+## 1. Architecture summary
+
+**ScenarioLab** should be implemented as a web application with a structured scenario engine, an orchestration backend, a Runway media adapter, an LLM-based evaluator constrained by expert-designed rubrics, and a privacy-first user profile and session store. Runway should be responsible for the product’s **embodied and cinematic layer**: real-time role-play characters, scenario visuals, replay clips, narrated summaries, and generated alternatives. The application itself should own the science-sensitive layer: scenario templates, rubrics, user preferences, safety rules, consent, progress tracking, and audit logs.
+
+The architecture should deliberately avoid making Runway the clinical, behavioral, or evaluation engine. This separation is what makes ScenarioLab feasible for a hackathon and defensible as a longer-term product. Runway’s API and models support media creation and orchestration, while the app’s backend coordinates tasks, polls asynchronous media jobs, applies safety policy, and stores only the minimum data required for useful practice.[^1] [^2]
+
+> **Technical thesis:** ScenarioLab is an agentic media system, not a single model call. The agent interprets a user goal, selects a curated scenario, launches an embodied interaction, evaluates the response against a constrained rubric, generates a replay artifact through Runway, and updates the user’s private progress state.
+
+## 2. Recommended hackathon stack
+
+For a hackathon, the stack should be optimized for fast iteration, clear demo quality, and safe handling of API keys. A full production stack can be more elaborate, but the MVP should not overbuild authentication, enterprise permissions, or longitudinal analytics.
+
+| Layer | Recommended MVP choice | Why this choice works |
+| --- | --- | --- |
+| **Frontend** | Next.js or Vite React + TypeScript + Tailwind | Fast interactive UI for scenario selection, role-play, replay, and progress cards. |
+| **Backend API** | Node.js/Express, Next.js API routes, or FastAPI | Keeps Runway and LLM API keys server-side; coordinates async jobs. |
+| **Database** | Postgres or SQLite for hackathon | Stores scenario templates, user preferences, sessions, rubric outputs, and media job state. |
+| **Object storage** | S3-compatible storage or local files for demo | Stores generated media artifacts, reference images, and replay outputs. |
+| **Runway integration** | Server-side Runway SDK/API wrapper | Creates and polls media tasks; isolates API details behind a `RunwayMediaService`. |
+| **LLM evaluator** | Gemini/OpenAI-compatible model behind rubric constraints | Scores user response and drafts feedback; should not operate unconstrained. |
+| **Realtime** | WebSocket/SSE for task updates | Lets frontend show “generating replay” and role-play state changes. |
+| **Safety layer** | Rules engine + LLM classifier fallback | Blocks crisis, abuse, self-harm, sexual content, medical claims, and unsafe escalation. |
+
+## 3. High-level system architecture
+
+ScenarioLab should be designed around clear boundaries. The frontend never calls Runway directly because media API keys must remain private. The backend receives user actions, looks up structured templates, calls an evaluator, calls Runway through a media adapter, and streams job status to the frontend.
+
+```mermaid
+flowchart TD
+  U[User] --> FE[Web App]
+  FE --> API[ScenarioLab Backend API]
+  API --> Auth[Consent and Role Permissions]
+  API --> Scenario[Scenario and Rubric Engine]
+  API --> Safety[Safety and Policy Engine]
+  API --> Eval[LLM Evaluator]
+  API --> Runway[Runway Media Adapter]
+  API --> DB[(Database)]
+  API --> Store[(Media Storage)]
+  Runway --> RAPI[Runway API]
+  RAPI --> Runway
+  Runway --> Store
+  API --> Events[WebSocket or SSE Status Events]
+  Events --> FE
+```
+
+This architecture supports both a simple hackathon version and a future production version. For the hackathon, authentication can be lightweight, storage can be simple, and scenario data can be JSON files. For a real product, user consent, role-based access, deletion, encryption, auditability, and human review workflows need to be treated as core infrastructure.
+
+## 4. Core services and responsibilities
+
+The core technical design should separate **scenario control**, **agent orchestration**, **media generation**, **evaluation**, and **safety**. If these responsibilities are collapsed into one prompt, the product becomes hard to debug and unsafe to scale.
+
+| Service | Responsibility | Key inputs | Key outputs |
+| --- | --- | --- | --- |
+| **Scenario Service** | Loads curated scenario templates, difficulty levels, character profiles, and target skills. | `scenario_id`, `user_profile`, `difficulty`. | `ScenarioSessionPlan`. |
+| **Profile Service** | Stores user preferences, accessibility settings, sensory intensity, and retention choices. | Onboarding form, session controls. | `UserProfile`, consent flags. |
+| **Policy Engine** | Applies hard safety rules before and after model calls. | User text, scenario metadata, role permissions. | Allow, warn, refuse, or escalate. |
+| **Conversation Orchestrator** | Manages turn-by-turn role-play and tool events. | Transcript, character state, scenario plan. | Next prompt, tool call, checkpoint. |
+| **Rubric Evaluator** | Scores user response against narrow rubric and drafts feedback. | User response, target skill, rubric, preferences. | `EvaluationResult`. |
+| **Replay Director** | Converts a session into a storyboard and Runway prompts. | Transcript excerpt, feedback, scenario visuals. | `ReplayStoryboard`, media prompts. |
+| **Runway Media Service** | Calls Runway for character, image, video, audio, and replay generation. | Prompt text, input media, ratio, duration, model. | Media task ID, status, output URL. |
+| **Progress Service** | Stores session summary, retry deltas, and social-validity ratings. | Evaluation result, retry data, user rating. | Progress card, next recommendation. |
+| **Audit Service** | Stores scenario version, rubric version, prompts, model outputs, and policy decisions. | Service events. | Debug and review trail. |
+
+## 5. Runway API integration strategy
+
+Runway should be integrated as a **media capability provider** behind a server-side adapter. ScenarioLab should not scatter Runway calls across UI components. Instead, all media-related operations should pass through a small set of service methods. This makes it easy to change models, add retries, track task status, and mock Runway during development.
+
+The Runway documentation indicates that model tasks are asynchronous: the application creates a task, then retrieves task status and output through the task lifecycle. The docs also show SDK-style usage where image-to-video calls include fields such as `model`, `promptImage`, `promptText`, `ratio`, and `duration`.[^2] Runway’s documentation and model guide describe capabilities across video generation, image generation, audio, and real-time characters, which map naturally to ScenarioLab’s practice partner and replay features.[^1] [^3]
+
+| ScenarioLab feature | Runway capability | Integration pattern | MVP priority |
+| --- | --- | --- | --- |
+| **Embodied practice partner** | Runway Characters / real-time avatars | Character session receives role, opening line, tone, and tool-calling instructions. | P0 if access is available; otherwise use pre-generated avatar video plus text chat. |
+| **Scene card** | Image generation | Generate visual scene thumbnail for workplace, classroom, interview, or clinic. | P1. |
+| **Replay Lens** | Text/image-to-video generation | Convert transcript into storyboard, create prompt, call video generation, poll task, display result. | P0. |
+| **Alternative response clip** | Text/image-to-video or video-to-video | Generate short “better response” clip based on evaluated feedback. | P1. |
+| **Narrated reflection** | Audio / voice generation if available | Generate voiceover for replay and progress card. | P2. |
+| **Localization and accessibility** | Dubbing/captions outside or alongside Runway | Add captions and text transcript; voice optional. | P1 captions; P2 dubbing. |
+
+## 6. Runway media adapter design
+
+The `RunwayMediaService` should expose product-level methods instead of raw model calls. This lets the rest of the application ask for a “Replay Lens” without knowing the exact model, parameters, or polling behavior.
+
+```ts
+interface RunwayMediaService {
+  createSceneCard(input: CreateSceneCardInput): Promise<MediaJob>;
+  createReplayLens(input: CreateReplayLensInput): Promise<MediaJob>;
+  createAlternativeResponseClip(input: AlternativeResponseInput): Promise<MediaJob>;
+  getMediaJobStatus(jobId: string): Promise<MediaJobStatus>;
+  cancelMediaJob(jobId: string): Promise<void>;
+}
+
+interface CreateReplayLensInput {
+  sessionId: string;
+  scenarioId: string;
+  storyboard: ReplayStoryboard;
+  referenceImageUrl?: string;
+  durationSeconds: 5 | 10;
+  ratio: "1280:720" | "720:1280" | "960:960";
+  safetyTags: string[];
+}
+```
+
+For the hackathon, `createReplayLens` can generate one short clip from a structured prompt and reference image. In production, it should generate multiple segments: the moment, the likely interpretation, the alternative response, and the recap. The MVP can display the generated clip alongside captions and a transcript summary.
+
+## 7. Agent loop design
+
+ScenarioLab’s agent should be a **stateful orchestrator** that chains structured decisions. It should not be a single chatbot prompt. Each scenario session should move through defined states, and the agent should be able to call tools such as `evaluate_response`, `generate_replay`, `lower_intensity`, `offer_hint`, and `end_session`.
+
+| State | Description | Tools available |
+| --- | --- | --- |
+| `SETUP` | Load user preferences, retention settings, and scenario. | `load_profile`, `load_scenario`, `apply_policy`. |
+| `PREVIEW` | Explain target skill, difficulty, and opt-out controls. | `show_instruction`, `adjust_intensity`. |
+| `ROLEPLAY_OPENING` | Character delivers opening line. | `start_character_session`, `log_turn`. |
+| `CUE_CHECK` | User identifies emotional or situational cue. | `score_cue`, `offer_hint`. |
+| `USER_RESPONSE` | User responds to character. | `log_turn`, `apply_policy`. |
+| `EVALUATION` | App evaluates response against rubric. | `evaluate_response`, `draft_feedback`. |
+| `REPLAY_GENERATION` | App generates Replay Lens storyboard and Runway video. | `create_storyboard`, `create_replay_lens`, `poll_media_job`. |
+| `RETRY` | User practices again with one adjustment. | `restart_roleplay`, `compare_attempts`. |
+| `REFLECTION` | User rates usefulness, realism, respect, and intensity. | `save_progress`, `save_social_validity`. |
+| `CLOSE` | User deletes, saves, or exports summary. | `delete_data`, `export_summary`. |
+
+## 8. Detailed session flow
+
+The session flow should be optimized for clarity and safety. The user should always know what is being practiced, why the system is giving feedback, and what data is being stored. This matters because autism-support AI can easily become opaque or surveillance-like if consent is not designed upfront.[^4]
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant Frontend
+  participant Backend
+  participant Scenario as Scenario Service
+  participant Safety as Policy Engine
+  participant Eval as Rubric Evaluator
+  participant Runway as Runway Media Service
+  participant DB as Database
+
+  User->>Frontend: Select goal and preferences
+  Frontend->>Backend: POST /sessions/start
+  Backend->>Scenario: Load scenario + rubric
+  Backend->>Safety: Validate scenario and preferences
+  Backend->>DB: Create session
+  Backend-->>Frontend: Scenario preview
+  User->>Frontend: Begin role-play
+  Frontend->>Backend: POST /sessions/{id}/turns
+  Backend->>Safety: Check user input
+  Backend->>DB: Store structured turn metadata
+  Backend-->>Frontend: Character response / next prompt
+  User->>Frontend: Submit response
+  Frontend->>Backend: POST /sessions/{id}/evaluate
+  Backend->>Eval: Evaluate against rubric
+  Eval-->>Backend: Scores + one feedback point
+  Backend->>DB: Save evaluation
+  Backend->>Runway: Create Replay Lens job
+  Runway-->>Backend: Media job id
+  Backend-->>Frontend: Job started
+  Runway-->>Backend: Job complete + output URL
+  Backend->>DB: Save media artifact
+  Backend-->>Frontend: Display replay + feedback
+  User->>Frontend: Retry or finish
+```
+
+## 9. Data model
+
+The data model should reflect three categories of data: durable user preferences, scenario and rubric definitions, and ephemeral session artifacts. The system should avoid storing raw audio/video by default. If transcripts are stored, the user should know and be able to delete them.
+
+### 9.1 Core tables
+
+| Table | Purpose | Key fields |
+| --- | --- | --- |
+| `users` | Account identity. | `id`, `email`, `created_at`, `role`. |
+| `user_profiles` | Communication and accessibility preferences. | `user_id`, `modality`, `feedback_style`, `intensity`, `topics_to_avoid`, `retention_policy`. |
+| `scenario_templates` | Curated scenario definitions. | `id`, `domain`, `target_skill`, `difficulty`, `setting`, `opening_line`, `hidden_state`, `version`. |
+| `rubrics` | Structured scoring definitions. | `id`, `target_skill`, `dimensions`, `examples`, `version`, `review_status`. |
+| `sessions` | Practice session metadata. | `id`, `user_id`, `scenario_id`, `status`, `started_at`, `ended_at`, `retention_mode`. |
+| `turns` | Role-play turn metadata. | `id`, `session_id`, `speaker`, `text_redacted`, `timestamp`, `policy_flags`. |
+| `evaluations` | Rubric outputs. | `id`, `session_id`, `rubric_id`, `scores_json`, `feedback`, `confidence`, `evaluator_model`. |
+| `media_jobs` | Runway task tracking. | `id`, `session_id`, `provider`, `provider_task_id`, `status`, `output_url`, `prompt_hash`. |
+| `social_validity` | User feedback on scenario quality. | `session_id`, `useful`, `realistic`, `respectful`, `intensity_ok`, `free_text`. |
+| `audit_logs` | Debug and safety review trail. | `id`, `actor`, `event_type`, `resource_id`, `metadata_json`, `created_at`. |
+
+### 9.2 Scenario template schema
+
+```json
+{
+  "id": "workplace_empathy_001",
+  "version": "0.1.0",
+  "domain": "workplace",
+  "target_skill": "empathetic_acknowledgment",
+  "difficulty": 1,
+  "setting": "break room after lunch",
+  "character": {
+    "role": "coworker",
+    "name": "Alex",
+    "tone": "tired but not in crisis",
+    "avatar_style": "realistic friendly adult coworker"
+  },
+  "opening_line": "I'm feeling really tired lately, and it's been hard to concentrate.",
+  "hidden_emotional_state": "overwhelmed and hoping to be heard",
+  "cue_type": "negative_emotion_vulnerability",
+  "success_criteria": [
+    "acknowledges emotional state",
+    "does not minimize or dismiss",
+    "asks one gentle follow-up question",
+    "respects boundaries"
+  ],
+  "common_missteps": [
+    "jumps directly to advice",
+    "changes the topic",
+    "invalidates the feeling",
+    "makes it about self"
+  ],
+  "model_response_example": "That sounds really hard. Do you want to talk about what's been making it difficult, or would you rather just take a quiet minute?",
+  "safety_notes": [
+    "avoid crisis content",
+    "do not imply direct communication is wrong",
+    "if user mentions self-harm or abuse, exit role-play"
+  ]
+}
+```
+
+### 9.3 Evaluation result schema
+
+```json
+{
+  "session_id": "sess_123",
+  "scenario_id": "workplace_empathy_001",
+  "target_skill": "empathetic_acknowledgment",
+  "scores": {
+    "cue_recognition": 2,
+    "acknowledgment": 1,
+    "curiosity_followup": 0,
+    "boundary_respect": 2,
+    "style_fit": 2
+  },
+  "strength": "You noticed that Alex was having a hard time and did not dismiss it.",
+  "one_next_step": "Try adding one gentle follow-up question before offering advice.",
+  "model_response": "That sounds exhausting. Do you want to talk about what has been making it hard to concentrate?",
+  "tone": "supportive_direct",
+  "confidence": 0.78,
+  "safety_flags": []
+}
+```
+
+## 10. API surface for ScenarioLab backend
+
+The backend API should be small and task-oriented. The frontend should not need to know whether a replay is generated by Runway, cached from a previous job, or substituted with a storyboard fallback.
+
+| Endpoint | Method | Purpose |
+| --- | --- | --- |
+| `/api/profile` | `GET/PUT` | Read and update user preferences and privacy settings. |
+| `/api/scenarios` | `GET` | List available scenarios by domain, target skill, and difficulty. |
+| `/api/sessions/start` | `POST` | Create a new practice session from scenario and preferences. |
+| `/api/sessions/:id/turns` | `POST` | Submit user turn or character turn metadata. |
+| `/api/sessions/:id/evaluate` | `POST` | Evaluate a user response against scenario rubric. |
+| `/api/sessions/:id/replay` | `POST` | Start Runway Replay Lens generation. |
+| `/api/media-jobs/:id` | `GET` | Return media task status and output URL. |
+| `/api/sessions/:id/retry` | `POST` | Start retry with adjusted prompt or difficulty. |
+| `/api/sessions/:id/feedback` | `POST` | Save social-validity and usefulness ratings. |
+| `/api/sessions/:id/delete` | `DELETE` | Delete session transcript, evaluations, and media artifacts according to policy. |
+| `/api/sessions/:id/export` | `POST` | Create user-approved coach/counselor summary. |
+
+## 11. Safety and policy architecture
+
+The Policy Engine should sit between user input, LLM evaluation, and Runway media generation. It should combine deterministic rules, scenario metadata, and a lightweight classifier. The MVP can implement deterministic keyword and category checks plus a final LLM safety classifier. Production should add more robust moderation, human review, and jurisdiction-specific compliance.
+
+| Risk | Detection | Response |
+| --- | --- | --- |
+| **Self-harm or crisis** | User text mentions intent, plan, or imminent harm. | Stop role-play, show crisis guidance, do not generate replay. |
+| **Abuse or coercion disclosure** | User reports violence, exploitation, or unsafe household/workplace. | Stop scenario, provide human-support guidance, avoid giving legal/clinical advice. |
+| **Medical or diagnostic request** | User asks “Do I have autism?” or seeks treatment recommendations. | Refuse diagnosis, suggest professional support, offer non-clinical practice. |
+| **Masking pressure** | Feedback implies user must suppress identity or act normal. | Rewrite feedback using user-chosen goals and multiple valid styles. |
+| **Sensitive scenario generation** | Scenario involves dating, sexuality, trauma, minors, or coercion. | Require curated template and stricter review; block from MVP. |
+| **Privacy exposure** | Coach/caregiver requests raw transcript without user consent. | Deny by default; require explicit user export. |
+
+## 12. Prompt architecture
+
+ScenarioLab should use multiple short, constrained prompts rather than one large prompt. Each prompt should receive structured JSON and return structured JSON. This improves reliability and auditability.
+
+| Prompt | Purpose | Input | Output |
+| --- | --- | --- | --- |
+| **Scenario planner** | Adapts curated template to user preferences without changing core learning goal. | Scenario template, user profile, intensity. | Session plan JSON. |
+| **Character system prompt** | Keeps avatar in role and within safe boundaries. | Character role, opening line, allowed behaviors. | Conversational turns. |
+| **Cue evaluator** | Scores cue identification. | Scenario cue, user cue answer. | Score and hint. |
+| **Response evaluator** | Scores user response against rubric. | User response, rubric, target skill, style preference. | Scores, strength, one next step. |
+| **Feedback rewriter** | Ensures feedback is respectful, direct, and non-shaming. | Raw evaluation and user preferences. | User-facing feedback. |
+| **Replay director** | Converts session into visual storyboard and Runway prompt. | Scenario, transcript excerpt, feedback. | Storyboard and video prompt. |
+| **Safety classifier** | Classifies high-risk content. | User text and context. | Risk category and action. |
+
+## 13. Replay Lens prompt strategy
+
+The Replay Lens is the clearest hackathon use of Runway. It turns a social moment into a short generated artifact that users can review. The replay should not be framed as “the truth” about what happened. It should be framed as **one possible interpretation** or **one alternative strategy**.
+
+| Replay segment | Visual intent | Example prompt direction |
+| --- | --- | --- |
+| **Original cue** | Show the other person as tired, overwhelmed, or hesitant. | “A realistic coworker in a quiet office break room, tired facial expression, gentle lighting, natural body language.” |
+| **Possible interpretation** | Visualize internal state without exaggerating. | “Subtle visual metaphor of mental fatigue, paperwork blur, soft focus, not dramatic or crisis-like.” |
+| **Alternative response** | Model a supportive response. | “Two coworkers talking calmly, one acknowledges the other’s stress and asks a gentle follow-up, warm respectful tone.” |
+| **Recap card** | Give a concrete strategy. | “Minimal clean title card: Notice, Acknowledge, Ask One Question.” |
+
+The MVP can generate one 5–10 second clip and pair it with text captions. If generation latency is too high during the demo, the product should support a graceful fallback: show the generated storyboard immediately, then update to the video when the Runway job completes.
+
+## 14. Technical MVP build plan
+
+A realistic hackathon build should prioritize a complete vertical slice rather than a broad feature set. The team should build one polished scenario end-to-end, plus a second scenario as evidence of extensibility.
+
+| Day / Phase | Build target | Deliverable |
+| --- | --- | --- |
+| **Phase 1: Skeleton** | Web UI, backend routes, scenario JSON, profile form. | User can start a scenario and see preview. |
+| **Phase 2: Role-play** | Character/chat interface, transcript state, safety checks. | User can role-play a short conversation. |
+| **Phase 3: Evaluation** | Rubric evaluator and feedback display. | User receives one strength and one next step. |
+| **Phase 4: Runway replay** | Replay Director and Runway media adapter. | User can generate and view Replay Lens clip. |
+| **Phase 5: Retry and progress** | Second attempt comparison and social-validity rating. | Demo shows adaptive loop and respectful feedback. |
+| **Phase 6: Polish** | Loading states, captions, privacy copy, demo script. | Hackathon-ready story and reliable fallback media. |
+
+## 15. Repository structure
+
+A clean repository structure will help Claude or another agent continue implementation research without confusion.
+
+```text
+scenariolab/
+  apps/
+    web/
+      src/
+        components/
+        pages-or-routes/
+        styles/
+  packages/
+    core/
+      scenario-schema.ts
+      rubric-schema.ts
+      policy-types.ts
+    api/
+      routes/
+      services/
+        ScenarioService.ts
+        ProfileService.ts
+        PolicyEngine.ts
+        RubricEvaluator.ts
+        ReplayDirector.ts
+        RunwayMediaService.ts
+        ProgressService.ts
+    data/
+      scenarios/
+        workplace_empathy_001.json
+        school_self_advocacy_001.json
+      rubrics/
+        empathetic_acknowledgment.json
+        self_advocacy.json
+  docs/
+    PRD.md
+    ARCHITECTURE.md
+    SAFETY.md
+    PROMPTS.md
+    CLAUDE.md
+```
+
+## 16. Production considerations
+
+A real ScenarioLab product would need deeper privacy, security, and validation work. The system might process highly sensitive conversations, so production should include encryption at rest, strict access control, data-retention policies, consent records, export/delete workflows, moderation logs, and human review. If the product is used by schools, clinics, minors, or healthcare-adjacent organizations, legal and compliance review becomes mandatory.
+
+| Area | Production need |
+| --- | --- |
+| **Security** | Encrypted storage, secret management, signed media URLs, audit logs, least-privilege roles. |
+| **Privacy** | Retention controls, deletion workflows, data export, consent history, minimized raw media storage. |
+| **Clinical boundary** | Clear disclaimers, professional review, crisis policies, and no diagnostic claims. |
+| **Participatory design** | Autistic advisors reviewing language, scenarios, rubrics, and feedback tone. |
+| **Validation** | Social-validity study first; pilot study second; real-world transfer study only with appropriate oversight. |
+| **Model governance** | Prompt/version tracking, evaluation logs, red-team testing, bias review, fallback behavior. |
+
+## 17. Key technical risks
+
+The biggest technical risk is not whether Runway can generate media. It is whether the app can reliably orchestrate media generation inside a structured, respectful, scientifically humble product loop. The second major risk is latency: generated replay clips may take long enough that the UX needs asynchronous status and fallback storyboards.
+
+| Risk | Mitigation |
+| --- | --- |
+| **Runway task latency disrupts flow** | Show storyboard immediately, poll job asynchronously, notify user when video is ready. |
+| **Character availability or API limitations** | Use text chat plus pre-generated avatar clips as fallback. |
+| **Evaluator gives harmful or narrow feedback** | Constrain to rubric, run feedback rewriter, add social-validity flagging. |
+| **Generated replay misrepresents scenario** | Frame as possible interpretation; use curated prompts; allow user to reject or flag. |
+| **Privacy concerns** | Store structured summaries by default; make raw transcript retention opt-in. |
+| **Overclaiming scientific efficacy** | Use non-clinical wording and measure social validity before outcomes. |
+
+## 18. Claude continuation prompt for technical research
+
+> Continue the ScenarioLab technical architecture research. Treat Runway as the embodied media and replay layer, not the evaluator or clinical engine. Strengthen the architecture by checking the latest Runway API docs for Characters, tool calling, image generation, video generation, task lifecycle, input constraints, and SDK examples. Then refine the backend service boundaries, data schema, prompt contracts, safety policies, and hackathon build plan. Pay special attention to latency, fallback design, privacy, and how to demonstrate agentic orchestration in a polished hackathon demo.
+
+## References
+
+[^1]: [Runway API Documentation](https://docs.dev.runwayml.com/)
+[^2]: [Runway API Usage Guide](https://docs.dev.runwayml.com/guides/using-the-api/)
+[^3]: [Runway Models Guide](https://docs.dev.runwayml.com/guides/models/)
+[^4]: User-provided research notes in `/home/ubuntu/upload/pasted_content_3.txt`, citing sources on multimodal autism assistive systems, privacy, adult independence, AI social coaching, and structured knowledge-base design.
+[^5]: [Runway API Hackathon](https://runwayml.com/api-hackathon)

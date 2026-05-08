@@ -1,0 +1,143 @@
+# ScenarioLab MediaPipe and Alternatives Architecture Addendum
+
+## Executive recommendation
+
+**MediaPipe is technically feasible for ScenarioLab, but it should be treated as an optional, browser-local interaction-sensing layer rather than the core intelligence of the product.** The most defensible MVP should use low-risk signals such as turn-taking, presence, gesture selection, hand raise, approximate head orientation, pause duration, and user-initiated comfort controls. ScenarioLab should avoid claiming that MediaPipe, or any similar tool, can reliably infer empathy, internal emotional state, autism severity, honesty, engagement quality, or therapeutic progress from facial expressions or body posture.
+
+The strongest architecture is a **hybrid interaction stack**. Runway Characters handles embodied conversational role-play. Runway generative media handles cinematic replay and scenario variation. A browser-local sensing module, using MediaPipe or a simpler alternative, provides explicit interaction cues that help the agent adapt the role-play without sending raw webcam video to the backend. The ScenarioLab science layer remains responsible for scenarios, rubrics, safety rules, consent, personalization, and progress tracking.
+
+| Layer | Recommended tool | Role in ScenarioLab | Risk posture |
+| --- | --- | --- | --- |
+| Embodied role-play | **Runway Characters API** | Conversational character, social partner, coach, replay narrator, tool-calling interface. | Strong fit if framed as practice, not therapy. |
+| Generated media | **Runway video/image models** | Scene setup, social story clips, alternate endings, replay explanations. | Strong fit for hackathon impact and polish. |
+| Local perception | **MediaPipe Tasks Vision** or **Human library** | Optional webcam-local signals: face presence, hand raise, gesture, rough posture, head orientation. | Useful only if privacy-preserving and non-diagnostic. |
+| Voice input | **Runway Character audio stream**, Web Speech API, or external STT | User speech, turn-taking, pause detection, transcript for coaching. | Lower risk than facial inference; still needs consent. |
+| Scientific reasoning | ScenarioLab backend + curated knowledge base | Chooses scenario, difficulty, feedback rubric, safety intervention, progress metadata. | Must be evidence-informed and human-reviewable. |
+
+## What MediaPipe can realistically contribute
+
+MediaPipe is best understood as a set of on-device machine-learning tasks for extracting landmarks and simple classifications from camera input. For ScenarioLab, the useful capabilities are **interaction primitives**, not psychological interpretations. The official web tasks include Face Landmarker, Gesture Recognizer, and Pose Landmarker. These can run in the browser through JavaScript and can process webcam frames locally, which aligns with ScenarioLab’s privacy requirements.
+
+| MediaPipe capability | Useful ScenarioLab signal | Good product use | What not to claim |
+| --- | --- | --- | --- |
+| Face Landmarker | Face present, face not present, approximate head pose, blendshape-style facial movement. | Detect if user has opted into camera practice and is visible; optionally support “looking away is okay” reflection. | Do not infer emotion, empathy, anxiety, attention, or autism traits from expression. |
+| Gesture Recognizer | Hand raise, thumbs up/down, open palm, pointing, custom gesture-like controls depending on model support. | Let a user pause, ask for help, indicate “try again,” or choose a response without speaking. | Do not treat gestures as clinical evidence or social competence. |
+| Pose Landmarker | Body keypoints, approximate posture, shoulders/torso orientation. | Support ergonomic feedback or a game-like “practice facing the speaker” mechanic if explicitly chosen. | Do not infer confidence, avoidance, mood, or sincerity. |
+| Running mode support | Image, video, or live stream processing. | Real-time practice loop in browser. | Do not assume consistent performance across all devices. |
+
+The key product principle is: **use perception to improve control and accessibility, not to judge the user.** For autistic and neurodivergent users, this distinction matters. ScenarioLab should not normalize eye contact or facial mimicry as universal goals. Instead, the product can support self-chosen goals such as preparing for a job interview, asking a teacher for help, resolving a misunderstanding, practicing self-advocacy, or understanding another person’s likely perspective.
+
+## How it fits with Runway Characters
+
+Runway Characters can be the embodied social partner. The sensing layer does not need to directly “control” the character’s face or animation. Instead, it should send small, explicit **interaction events** to the ScenarioLab orchestrator, and the orchestrator can decide whether to call a Character tool, update the dialogue state, or generate feedback.
+
+> The clean architecture is: **Browser-local sensing → event summarizer → ScenarioLab orchestrator → Runway Character tool call or dialogue instruction.**
+
+| Event from sensing layer | Example event payload | Agent response | Runway use |
+| --- | --- | --- | --- |
+| User raises hand | `{type: "help_requested", source: "gesture", confidence: 0.86}` | Character pauses and offers choices: “Do you want a hint, a reset, or a calmer version?” | Character speaks supportive prompt. |
+| User gives thumbs up | `{type: "ready", source: "gesture"}` | Scenario starts or moves to next beat. | Character begins next line. |
+| Long silence | `{type: "pause_detected", durationMs: 9000}` | Character offers extra time or a nonverbal response option. | Character adapts dialogue. |
+| User opts to pause | `{type: "pause_requested", source: "button_or_gesture"}` | Session enters regulation mode. | Character validates and waits. |
+| Face not present after opt-in | `{type: "camera_not_ready"}` | UI offers camera troubleshooting or camera-off mode. | No character judgment. |
+
+This event-based design keeps the product modular. If MediaPipe is unreliable on a device, ScenarioLab can fall back to buttons, keyboard controls, voice commands, or chat input without breaking the core role-play experience.
+
+## Easier alternatives to MediaPipe
+
+There are alternatives, but most are not clearly better than MediaPipe for the full ScenarioLab sensing layer. The right choice depends on whether the hackathon MVP needs **simple controls**, **full body/face/hand landmarks**, or **research-friendly browser-local sensing**.
+
+| Alternative | What it does | Ease of use | Fit with Runway Characters | Recommendation |
+| --- | --- | ---: | --- | --- |
+| **No vision model: buttons + voice + typed choices** | Uses explicit user input only. | Very high | Excellent; tool calls can be triggered by user choices. | Best safest MVP fallback and should always exist. |
+| **Web Speech API** | Browser speech recognition with events for result, speech start/end, and errors; limited browser support and may use server recognition in some browsers. | High | Good for transcripts and turn-taking; pair with Character dialogue. | Good hackathon shortcut, but privacy/browser caveats must be disclosed. |
+| **MediaPipe Tasks Vision** | Face, gesture, pose, hand, object, image tasks. | Medium | Good as local event sensor. | Best balanced option for robust local multimodal signals. |
+| **Human library by Vlad Mandic** | Unified browser/Node library for face, body pose, hand/finger tracking, iris/gaze, gesture recognition, segmentation, and optional emotion/age/gender prediction. | Medium-high | Strong for one-library prototyping; WebGPU/WebGL/WASM support. | Good alternative if you want a single higher-level API, but disable emotion/age/gender claims. |
+| **Handtrack.js** | Browser hand bounding boxes and basic hand pose classes such as open, closed, pinch, point. | High | Useful for gesture commands like pause/help/next. | Good lightweight demo option if only hand gestures matter; less complete and mobile caveats. |
+| **WebGazer.js** | Webcam-based browser gaze estimation with self-calibration from clicks/cursor movement; runs client-side and requires webcam consent. | Medium | Could support optional “attention to interface” experiments. | Avoid for autism social coaching MVP; gaze is ethically sensitive and can over-normalize eye contact. |
+| **TensorFlow.js models** | Face/hand/body models for JS, including models historically linked to MediaPipe-style landmarks. | Medium | Similar to MediaPipe but more assembly required. | Use only if team already knows TF.js. |
+| **face-api.js** | Face detection, landmarks, recognition, and expression classification in browser. | Medium-high | Technically usable, but expression classification is risky. | Not recommended for ScenarioLab except basic face presence; avoid expression labels. |
+| **Commercial emotion AI APIs** | Voice/facial expression/emotion analytics. | Low-medium | Could be integrated as external backend. | Not recommended for MVP; high privacy, consent, bias, and overclaiming risk. |
+
+## Best MVP sensing architecture
+
+The MVP should not start with face emotion detection. It should start with **explicit interaction, accessibility, and agency**. The easiest build that still feels advanced is a three-tier input system.
+
+| Tier | Input method | Why it matters |
+| --- | --- | --- |
+| Tier 1 | Buttons, keyboard, typed response, and voice transcript. | Reliable, accessible, debuggable, and ethically safe. |
+| Tier 2 | Optional hand gestures via MediaPipe Gesture Recognizer or Handtrack.js. | Adds embodied interaction without judging the user’s face. |
+| Tier 3 | Optional face/pose presence and replay annotation via MediaPipe or Human. | Supports richer reflection only when user opts in. |
+
+The MVP implementation should expose a small internal API such as:
+
+```ts
+type InteractionEvent =
+  | { type: 'user_speech_result'; text: string; confidence?: number; timestamp: number }
+  | { type: 'pause_detected'; durationMs: number; timestamp: number }
+  | { type: 'gesture_detected'; label: 'raise_hand' | 'thumbs_up' | 'stop' | 'point'; confidence: number; timestamp: number }
+  | { type: 'camera_presence'; present: boolean; timestamp: number }
+  | { type: 'user_control'; action: 'pause' | 'hint' | 'repeat' | 'skip' | 'end'; timestamp: number };
+```
+
+These events should be interpreted by a **Safety and Adaptation Policy** before anything reaches the character. For example, a long silence should not be labeled as anxiety or failure. It should be treated neutrally: “The user may need more time. Offer choices.”
+
+```ts
+type AgentPolicyDecision = {
+  action: 'continue' | 'offer_hint' | 'pause' | 'simplify' | 'increase_difficulty' | 'ask_preference';
+  rationale: string;
+  runwayCharacterInstruction?: string;
+  shouldLogForProgress: boolean;
+};
+```
+
+## Recommended architecture update
+
+ScenarioLab’s architecture should add a **Client Perception Worker** and an **Interaction Event Bus**. Raw camera frames should stay on the client by default. The backend should only receive sparse, consented event summaries.
+
+| Component | Location | Responsibility | Data retained |
+| --- | --- | --- | --- |
+| Client Perception Worker | Browser Web Worker | Runs MediaPipe/Human/Handtrack on webcam frames. | No raw video by default. |
+| Interaction Event Bus | Browser app | Normalizes camera, voice, button, and keyboard events. | Ephemeral session events. |
+| Consent and Controls Layer | Browser app | Allows camera-off mode, opt-in recording, pause, delete, and data export. | Consent state and preferences. |
+| Adaptation Policy Engine | Backend or client | Converts events into safe coaching actions. | Event summaries and policy decisions. |
+| Scenario Orchestrator | Backend | Maintains scenario state and calls Runway Character tools. | Scenario state, transcript, rubric metadata. |
+| Runway Character Session | Runway + app | Provides embodied role-play and coaching dialogue. | Depends on Runway session handling. |
+| Replay Generator | Backend + Runway media models | Generates post-session social story clips or alternate endings. | Generated assets and user-approved transcript snippets. |
+
+## Privacy and safety requirements
+
+ScenarioLab should adopt a strict privacy posture because it may involve minors, disabled users, classroom contexts, and sensitive behavioral data. The default should be **no recording and no upload of webcam video**. If video replay is offered, it should be opt-in, local-first when possible, and deletable.
+
+| Requirement | Product behavior |
+| --- | --- |
+| Consent before camera/mic | Explain what is captured, what stays local, and what is stored. |
+| Camera-off mode | Full role-play should work with text/buttons/audio only. |
+| No hidden inference | Never label a user as anxious, inattentive, low-empathy, autistic, or socially deficient. |
+| Opt-in replay | Generated replays should use transcripts and synthetic scenes unless the user explicitly uploads media. |
+| Data minimization | Store scenario choices, user goals, and self-reflections; avoid storing raw biometric data. |
+| Explainable feedback | Feedback should reference observable behavior and chosen rubric, not inferred mental state. |
+| Human oversight | For clinical/educational deployment, caregivers, therapists, educators, or autistic advisors should validate scenarios and feedback language. |
+
+## How this strengthens the Runway hackathon pitch
+
+Adding MediaPipe or a lightweight alternative can make ScenarioLab feel more agentic, but only if it is framed carefully. The pitch should not be “we detect autistic emotions.” The pitch should be:
+
+> **ScenarioLab combines Runway’s embodied media agents with privacy-preserving local interaction signals so users can practice difficult social moments in a way that is adaptive, consent-based, and neurodiversity-affirming.**
+
+That makes the technical depth more impressive because the system is not a single Runway API call. It is a multimodal agent loop: Runway Character dialogue, local input sensing, scenario state, safety policy, adaptive prompting, and generated replay media.
+
+## Final recommendation
+
+For the hackathon, use this stack:
+
+| Decision | Recommendation |
+| --- | --- |
+| Primary input | Voice, typed choices, buttons. |
+| Optional embodied input | **MediaPipe Gesture Recognizer** for hand raise, stop, thumbs up, and maybe pointing. |
+| Avoid in MVP | Gaze scoring, emotion classification, autism trait inference, clinical progress claims. |
+| Alternative if MediaPipe is too slow | Handtrack.js for simple hand commands only. |
+| Alternative if team wants one unified package | Human library, with face recognition, age, gender, and emotion modules disabled. |
+| Runway integration | Use interaction events to trigger Character tool calls and scenario-state changes; use Runway media generation for post-session replay and alternate endings. |
+
+The simplest credible build is therefore: **Runway Character + Scenario Orchestrator + explicit controls + optional hand gesture layer + generated replay.** MediaPipe can enhance the demo, but ScenarioLab should not depend on it for its scientific validity. The science should come from structured scenarios, expert-informed rubrics, participant-centered design, privacy controls, and user self-reflection.

@@ -1,0 +1,101 @@
+# ScenarioLab Claude Handoff Brief
+
+Author: **Manus AI**  
+Date: May 8, 2026  
+Purpose: **Context package for Claude to continue research, brainstorming, and implementation planning**
+
+## 1. What ScenarioLab is
+
+**ScenarioLab** is an evidence-informed social rehearsal studio that helps users practice meaningful conversations through structured scenarios, embodied role-play, adaptive feedback, and generated replay clips. The product is designed for neurodivergent and autistic users, students, job seekers, managers, educators, and anyone who wants a low-risk way to rehearse difficult or ambiguous conversations.
+
+The product should be framed as a **non-clinical communication practice tool**, not an autism treatment, diagnostic system, or AI therapist. The central user promise is that ScenarioLab helps people **prepare, understand, rehearse, retry, and reflect**. It should never imply that the goal is to “act normal,” mask autistic traits, or satisfy a single neurotypical standard.
+
+## 2. Highest-confidence product direction
+
+The strongest hackathon concept is **ScenarioLab: Replay Lens for social rehearsal**. A user chooses a short scenario, practices with an embodied character, receives one structured feedback point, and generates a short Runway-powered replay clip that visualizes the moment and one alternative strategy.
+
+| Product decision | Recommendation |
+| --- | --- |
+| **Demo scenario** | Workplace empathy or school self-advocacy. |
+| **Core loop** | Preview → Role-play → Cue check → Response → Feedback → Replay Lens → Retry → Reflection. |
+| **Runway role** | Embodied practice partner and generated replay media. |
+| **Non-Runway role** | Scenario templates, rubrics, evaluator, safety, consent, user profile, and progress tracking. |
+| **Scientific stance** | Evidence-informed and user-centered; no clinical efficacy claim. |
+| **Ethical stance** | Neurodiversity-affirming, autonomy-preserving, privacy-first. |
+
+## 3. Files in this handoff package
+
+| File | Purpose |
+| --- | --- |
+| `/home/ubuntu/scenariolab_prd_personas_research_context.md` | Main PRD, personas, product principles, MVP requirements, research implications, and Claude research tasks. |
+| `/home/ubuntu/scenariolab_technical_architecture.md` | Technical architecture, service boundaries, Runway adapter, agent loop, data model, API surface, safety architecture, and build plan. |
+| `/home/ubuntu/scenariolab_feasibility_and_science_requirements.md` | Feasibility addendum explaining what Runway can and cannot do and what scientific evidence/data are needed. |
+| `/home/ubuntu/scenariolab_designcrit_deep_dive.md` | Earlier deep dive comparing ScenarioLab and DesignCrit, useful for alternate concept framing. |
+| `/home/ubuntu/runway_hackathon_project_ideas_final.md` | Ranked hackathon ideas and criteria mapping. |
+| `/home/ubuntu/runway_hackathon_brainstorming_notes.md` | Raw research notes from Runway docs, hackathon page, Stanford article, and uploaded sources. |
+| `/home/ubuntu/upload/fpsyt-15-1521926.pdf` | User-provided Frontiers in Psychiatry study on AI in autism education. |
+| `/home/ubuntu/upload/pasted_content_3.txt` | Latest user-provided research notes on autism-focused AI agents, multimodal supports, memory, privacy, and safety. |
+
+## 4. Current product assumptions
+
+ScenarioLab should assume that the app needs a structured knowledge base and an orchestrator, not just a general-purpose chatbot. The knowledge base should include scenario templates, rubrics, safety policies, user preferences, social-validity feedback, and optional support documents. The orchestrator should choose the right template, adapt intensity, manage role-play, call an evaluator, generate a replay via Runway, and update progress.
+
+| Assumption | Why it matters |
+| --- | --- |
+| **Structured before generative** | Scientific and safety quality depends on scenario/rubric constraints, not freeform improvisation. |
+| **Runway as media layer** | Runway makes the product emotionally legible, embodied, and hackathon-impressive. |
+| **Evaluator outside Runway** | The science-sensitive feedback layer should be separately auditable and constrained. |
+| **Privacy by default** | Autistic-support tools can become surveillance tools if caregiver/teacher access is default. |
+| **Social validity first** | The first research goal is whether users find it useful, respectful, realistic, and appropriately intense. |
+
+## 5. Open research questions for Claude
+
+Claude should continue the work by validating and expanding the evidence base. The most important research question is not “Can AI teach empathy?” but **which parts of social rehearsal can be safely and respectfully supported by structured AI media without coercing masking or making clinical claims**.
+
+| Area | Questions to research |
+| --- | --- |
+| **Autistic adult perspectives** | What do autistic adults say about social-skills training, masking, self-advocacy, and AI supports? |
+| **Evidence-based practice** | What is the evidence for role-play, video modeling, social narratives, self-management, and social-validity measures? |
+| **Neurodiversity-affirming design** | How should feedback be written to support autonomy and communication choice? |
+| **Privacy and consent** | What are best practices for AI tools used by disabled adults, students, caregivers, and institutions? |
+| **Rubrics** | What narrow rubric dimensions can be measured without judging personality or neurotype? |
+| **Scenario taxonomy** | Which 20 scenarios are safe, useful, emotionally legible, and demo-friendly? |
+| **Runway docs** | What are the latest exact capabilities, limits, model parameters, and SDK patterns for Characters, video, images, and task polling? |
+
+## 6. Suggested Claude prompts
+
+### Prompt A: Research deepening
+
+> Read the ScenarioLab PRD, technical architecture, feasibility addendum, user-provided PDF, and latest pasted research notes. Continue research on evidence-informed, neurodiversity-affirming social rehearsal. Focus on autistic adult perspectives, participatory design, self-advocacy, video modeling, role-play, social validity, privacy, and risks of masking pressure. Return a revised evidence map with citations, product implications, and areas where ScenarioLab must avoid clinical claims.
+
+### Prompt B: Scenario library
+
+> Build a v1 ScenarioLab scenario library with 20 structured scenario templates. Each template should include domain, user persona, target skill, difficulty, opening line, hidden emotional state, cue type, success criteria, common missteps, model response examples, safety notes, and replay prompt hints. Prioritize workplace empathy, school self-advocacy, interview prep, healthcare communication, peer ambiguity, and repair after misunderstanding.
+
+### Prompt C: Rubric design
+
+> Design neurodiversity-affirming rubrics for ScenarioLab. Create rubrics for empathetic acknowledgment, self-advocacy, clarification, boundary setting, repair after misunderstanding, and interview response structure. Each rubric should avoid judging eye contact, facial expression, tone masking, or neurotypical performance. It should evaluate whether the response advances the user’s chosen goal and respects the other person’s boundaries.
+
+### Prompt D: Runway technical validation
+
+> Validate the ScenarioLab technical architecture against the latest Runway API docs. Identify exact models and endpoints needed for Characters, tool calling, image generation, video generation, audio if relevant, input media constraints, output URLs, task lifecycle, polling, rate/latency considerations, and SDK examples. Update the RunwayMediaService design with concrete request/response pseudocode.
+
+### Prompt E: Hackathon demo strategy
+
+> Create a hackathon demo script for ScenarioLab that can be completed in under three minutes. The demo should show a user selecting a scenario, practicing with a character, receiving one respectful feedback point, generating a Runway replay clip, retrying, and seeing progress. Include judge-facing narration that maps the demo to creativity, technical depth, and impact.
+
+## 7. Recommended MVP build scope
+
+The MVP should be a polished vertical slice. The team should not try to build every possible autism-support feature, caregiver portal, clinical dashboard, or long-term memory system during the hackathon. The demo should prove that ScenarioLab can orchestrate multiple creative and evaluative steps into a product people might actually use.
+
+| Must build | Should build if time permits | Defer |
+| --- | --- | --- |
+| Scenario selection, user preferences, structured role-play, evaluator, Replay Lens generation, retry, privacy copy. | Runway Character integration, captions, second scenario, social-validity ratings, exportable progress card. | Full caregiver portal, clinical dashboard, longitudinal analytics, document upload, crisis workflows beyond safe handoff, custom avatars. |
+
+## 8. Final strategic recommendation
+
+The strongest version of ScenarioLab is not “AI teaches autistic users empathy.” That framing is too narrow and ethically risky. The strongest version is:
+
+> **ScenarioLab is a private rehearsal studio for conversations that matter. It uses embodied AI media to make social situations visible, structured rubrics to make feedback transparent, and user-controlled preferences to keep practice respectful, accessible, and autonomy-preserving.**
+
+This concept can compete strongly in the Runway hackathon because it demonstrates a genuine agentic system: it interprets a user goal, manages an embodied role-play, evaluates against a structured rubric, generates adaptive media, supports retry, and stores progress while respecting consent. It also has a credible path beyond the hackathon because the same architecture can expand into education, workforce development, accessibility, and coaching without requiring clinical claims on day one.

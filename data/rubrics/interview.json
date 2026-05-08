@@ -1,0 +1,146 @@
+{
+  "id": "interview_v1",
+  "version": "0.1.0",
+  "target_skill": "interview_response_structure",
+  "scale_per_dimension": "0-2",
+  "max_total": 8,
+  "frameworks": [
+    {
+      "name": "Past-Behavior Structured Interviewing (STAR)",
+      "citation": "Campion, M. A., Pursell, E. D., & Brown, B. K. (1988). Structured interviewing: Raising the psychometric properties of the employment interview. Personnel Psychology, 41(1), 25-42.",
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1744-6570.1988.tb00630.x",
+      "doi": "https://doi.org/10.1111/j.1744-6570.1988.tb00630.x",
+      "rationale": "Structured behavioral questions raise interview reliability and predictive validity from r ≈ .14 (unstructured) to r ≈ .56."
+    },
+    {
+      "name": "Structured Interview Meta-Analysis",
+      "citation": "Levashina, J., Hartwell, C. J., Morgeson, F. P., & Campion, M. A. (2014). The structured employment interview: Narrative and quantitative review of the research literature. Personnel Psychology, 67(1), 241-293.",
+      "url": "http://www.morgeson.com/downloads/levashina_hartwell_morgeson_campion_2014.pdf",
+      "doi": "https://doi.org/10.1111/peps.12052",
+      "rationale": "Confirms that structure — not narrative polish — produces validity, and that anchored content-based rating scales outperform global impression ratings."
+    },
+    {
+      "name": "Neurodiversity-Affirming Adaptations",
+      "citation": "Maras, K., Norris, J. E., Nicholson, J., Heasman, B., Remington, A., & Crane, L. (2021). Ameliorating the disadvantage for autistic job seekers: An initial evaluation of adapted employment interview questions. Autism, 25(4), 1060-1075.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8108109/",
+      "doi": "https://doi.org/10.1177/1362361320981319",
+      "rationale": "Tested explicit, multi-part, literal-friendly question formats with autistic candidates and found that adaptations to question wording and scoring expectations — not changes in candidate ability — closed most of the rating gap. Justifies rewarding clarification, literal answers, and concrete factual specificity over storytelling polish."
+    },
+    {
+      "name": "Practitioner guidance",
+      "citation": "AskEARN — Including Neurodivergent Workers: Job Descriptions and Interviewing.",
+      "url": "https://askearn.org/page/neurodiversity-job-descriptions-and-interviewing",
+      "rationale": "U.S. DOL-funded Employer Assistance and Resource Network on Disability Inclusion."
+    }
+  ],
+  "dimensions": [
+    {
+      "id": "D1",
+      "name": "Clarification when prompt is vague",
+      "framework_source": "Maras 2020 (explicit/multi-part questions); Levashina 2014 (probing)",
+      "scoring": {
+        "0": { "label": "Ignores ambiguity", "criteria": "Ignores ambiguity; answers a question that wasn't asked.", "example": "Sure, here's a story…" },
+        "1": { "label": "Notices but proceeds", "criteria": "Notices vagueness but proceeds without resolving it.", "example": "I guess you mean at work — I'll go with that." },
+        "2": { "label": "Asks clarifying or states interpretation", "criteria": "Asks a focused clarifying question, OR explicitly states the interpretation being used.", "example": "Do you mean a conflict with a coworker or with a customer? I'll answer the coworker case." }
+      }
+    },
+    {
+      "id": "D2",
+      "name": "Structure / organization (S-T-A-R coverage)",
+      "framework_source": "Campion 1988; STAR",
+      "scoring": {
+        "0": { "label": "Single blob", "criteria": "Single undifferentiated blob; missing 3+ STAR elements." },
+        "1": { "label": "2 of 4 STAR elements", "criteria": "Covers 2 of 4 STAR elements (e.g., Situation + Action only)." },
+        "2": { "label": "All 4 elements", "criteria": "Covers all four — Situation, Task, Action, Result — in any order. Bullet-style, list-style, or chronological all count equally." }
+      }
+    },
+    {
+      "id": "D3",
+      "name": "Specificity (concrete > general)",
+      "framework_source": "Maras 2020 (provide examples, give details); Levashina 2014 (content-based scales)",
+      "scoring": {
+        "0": { "label": "Generalities only", "criteria": "Generalities only.", "example": "I'm a team player and I always communicate well." },
+        "1": { "label": "Mixed", "criteria": "Mixes one concrete detail with generalities." },
+        "2": { "label": "Concrete factual", "criteria": "Names a specific event, role, action, tool, or number. Literal/factual phrasing scores fully here.", "example": "In March 2024, on the QA team, I rewrote the test plan and cut regression time from 4h to 90min." }
+      }
+    },
+    {
+      "id": "D4",
+      "name": "Relevance + outcome stated",
+      "framework_source": "Campion 1988 (job-relatedness); STAR Result",
+      "scoring": {
+        "0": { "label": "Doesn't match or no outcome", "criteria": "Example doesn't match the question, or no outcome given." },
+        "1": { "label": "Loose match", "criteria": "Example matches loosely; outcome implied but not stated." },
+        "2": { "label": "Match + outcome", "criteria": "Example clearly matches what was asked AND states an outcome (what happened, what was learned, or what changed). A null/negative outcome honestly reported scores fully." }
+      }
+    }
+  ],
+  "scoring_bands": {
+    "strong": "≥6 / 8",
+    "developing": "3-5 / 8",
+    "needs_another_pass": "≤2 / 8"
+  },
+  "worked_examples": {
+    "prompt": "Tell me about a time you handled a conflict at work.",
+    "strong": [
+      {
+        "label": "S1 — literal / low-flair",
+        "response": "Situation: A teammate and I disagreed on the database schema in May 2024. Task: Pick one design before sprint end. Action: I wrote a one-page comparison doc with three trade-offs and we reviewed it together. Result: We picked their option with two of my changes. Sprint shipped on time.",
+        "scores": { "D1": 2, "D2": 2, "D3": 2, "D4": 2 },
+        "total": 8,
+        "reasoning": "Hits all four STAR elements explicitly (D2 = 2), highly specific (D3 = 2), outcome stated (D4 = 2). No narrative arc required. Note D1 = 2 because by labeling each STAR element the candidate is explicitly stating their interpretation."
+      },
+      {
+        "label": "S2 — asks clarifying question first",
+        "response": "Quick clarification — do you mean conflict over a decision or interpersonal conflict? … OK, decision conflict. Last quarter, our designer and I disagreed on the onboarding flow. I proposed running a 5-user test; we did, the data favored her version, we shipped it, retention rose 6%.",
+        "scores": { "D1": 2, "D2": 2, "D3": 2, "D4": 2 },
+        "total": 8,
+        "reasoning": "Models D1 = 2 (clarification rewarded, not penalized), then full STAR."
+      },
+      {
+        "label": "S3 — conventional narrative",
+        "response": "At my last job a coworker missed deadlines repeatedly. I scheduled a 1:1, asked what was blocking him, found out he had no access to the staging server, got him access the same day, and the next two sprints he hit every deadline.",
+        "scores": { "D1": 1, "D2": 1, "D3": 2, "D4": 2 },
+        "total": 7,
+        "reasoning": "Strong specificity and outcome; Task is implied rather than stated (D2 = 1)."
+      }
+    ],
+    "weak": [
+      {
+        "label": "W1 — generalities",
+        "response": "I think communication is really key. I always try to listen and find common ground because conflict is just part of any workplace.",
+        "scores": { "D1": 0, "D2": 0, "D3": 0, "D4": 0 },
+        "total": 0,
+        "reasoning": "No event, no STAR, no outcome."
+      },
+      {
+        "label": "W2 — wrong question",
+        "response": "I love working in teams. One time my team won an award for collaboration — it was amazing.",
+        "scores": { "D1": 0, "D2": 1, "D3": 1, "D4": 0 },
+        "total": 2,
+        "reasoning": "Doesn't address conflict (D4 = 0); some specificity (D3 = 1)."
+      },
+      {
+        "label": "W3 — story with no result",
+        "response": "There was this whole thing with a coworker, it was tense, we had a meeting, then another meeting, things were said. Anyway, that's what happened.",
+        "scores": { "D1": 0, "D2": 1, "D3": 1, "D4": 0 },
+        "total": 2,
+        "reasoning": "Narrative-ish but no concrete actions, no outcome (D3 = 1, D4 = 0). Demonstrates that 'story flow' alone earns nothing."
+      }
+    ]
+  },
+  "do_not_score": [
+    "Narrative polish, story arc, or engaging delivery",
+    "Emotional expressiveness, warmth, charisma, executive presence",
+    "Small talk, rapport-building openers, tone-matching the interviewer",
+    "Eye-contact references, body-language descriptions, vocal variety",
+    "Verbosity or word count — a 60-word literal answer can score 8/8",
+    "Hedging language vs. confident language ('I think…' vs. 'I did…') — score the content, not the register",
+    "Disclosure or non-disclosure of neurodivergence — both are valid; score neither up nor down",
+    "Use of 'I' vs. 'we' — score whether the action is concrete, not the pronoun",
+    "Asking a clarifying question — this is rewarded in D1, never penalized as not knowing the answer",
+    "Pauses, 'let me think', or requesting to re-read the prompt"
+  ],
+  "evaluator_directive": "None of the do_not_score items correlate with structured-interview validity (Levashina et al., 2014), and several actively penalize autistic communication styles (Maras et al., 2020). If you find yourself wanting to deduct for any of them, re-score on content only.",
+  "attribution": "Interview response rubric grounded in past-behavior structured interviewing (Campion, Pursell, & Brown, 1988; Levashina, Hartwell, Morgeson, & Campion, 2014) with neurodiversity-affirming adaptations from Maras et al. (2021, Autism)."
+}

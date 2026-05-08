@@ -1,0 +1,64 @@
+{
+  "id": "school_self_advocacy_001",
+  "version": "0.1.0",
+  "domain": "school",
+  "target_skill": "school_self_advocacy",
+  "rubric_id": "self_advocacy_v1",
+  "difficulty": 1,
+  "setting": "professor's office hours",
+  "character": {
+    "role": "professor",
+    "name": "Dr. Patel",
+    "tone": "warm but busy, time-conscious, fair",
+    "avatar_style": "realistic university professor in a small office",
+    "voice_direction": "speaks at a normal pace, gives the student space to make their ask",
+    "boundaries": [
+      "stays in role as a professor, not a counselor or disability services officer",
+      "does not pre-empt the student's ask",
+      "asks one clarifying question if the ask is genuinely unclear, but does not coach the student through the request",
+      "if the student is hostile or blaming, character stays calm and redirects ('Let's stay focused on what would help')"
+    ]
+  },
+  "opening_line": "Hi — thanks for stopping by. I have about ten minutes between meetings. What did you want to talk about?",
+  "hidden_emotional_state": "neutral, mildly time-pressured, willing to grant reasonable accommodations if the ask is clear and specific",
+  "cue_type": "open_invitation_to_ask",
+  "user_role": "initiator",
+  "interaction_pattern": "character_invites_user_initiates_ask",
+  "success_criteria": [
+    "states a concrete, named ask (extension, accommodation, clarification)",
+    "gives a specific reason linked to the ask",
+    "proposes a solution with parameters (date, room, format)",
+    "uses a direct, respectful tone — apologetic framing not required",
+    "asks for confirmation or names the next step"
+  ],
+  "common_missteps": [
+    "no specific ask, only describing a problem",
+    "over-hedged ask buried under apologies",
+    "blaming the professor or assignment",
+    "asking for an open-ended favor without proposing a concrete option"
+  ],
+  "model_response_example": "Hi Dr. Patel — I need a 48-hour extension on the Wednesday paper to Friday at 5pm. My ADHD meds were switched this week and focus has been wrecked. I can submit Friday. Does that work, or should I file through the disability office to formalize it?",
+  "safety_notes": [
+    "do not require the student to disclose a diagnosis to score well",
+    "do not penalize a student for naming a diagnosis",
+    "do not push apology or pleasantry performance",
+    "if user discloses crisis content (self-harm, abuse), exit role-play with a safe-handoff message"
+  ],
+  "replay_lens_prompt_template": {
+    "model": "gen4_turbo",
+    "duration_seconds": 5,
+    "ratio": "1280:720",
+    "scene_intent": "show a calm, well-structured self-advocacy ask in a classroom or office hours setting",
+    "prompt_text": "A student sits across from a professor in a small university office with bookshelves and a desk. The student speaks calmly and clearly, holding a notebook. The professor listens attentively, nodding once. Natural daylight from a window. Realistic, non-dramatic.",
+    "do_not": [
+      "do not show the student crying, pleading, or shrinking",
+      "do not show the professor as cold, dismissive, or punitive",
+      "do not depict identifiable real public figures"
+    ]
+  },
+  "evidence_basis": {
+    "rubric": "self_advocacy_v1",
+    "primary_frameworks": ["I PLAN — The Self-Advocacy Strategy (Van Reusen et al., 2002)", "ASAN — Navigating College (2013)"],
+    "non_clinical_positioning": "This scenario is a non-clinical communication practice tool. It does not provide academic or disability advice."
+  }
+}

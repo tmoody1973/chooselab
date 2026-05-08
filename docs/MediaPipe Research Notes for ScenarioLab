@@ -1,0 +1,58 @@
+# MediaPipe Research Notes for ScenarioLab
+
+Author: **Manus AI**  
+Date: May 8, 2026
+
+## Official MediaPipe Face Landmarker findings
+
+Source: https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker/web_js
+
+The MediaPipe Face Landmarker web task detects face landmarks and facial expression-related blendshape scores in images and videos. It can run in JavaScript using the `@mediapipe/tasks-vision` NPM package or a CDN bundle. It supports `IMAGE` mode and `VIDEO` mode, including decoded video frames or livestream camera input. Outputs include 3D face landmarks, optional face blendshape coefficients, and optional facial transformation matrices.
+
+Important implementation details:
+
+| Area | Finding |
+| --- | --- |
+| Package | `@mediapipe/tasks-vision` |
+| Browser setup | Uses `FilesetResolver.forVisionTasks` and WASM assets. |
+| Model | Requires a compatible Face Landmarker model asset in project storage or loaded from a path/buffer. |
+| Running modes | `IMAGE` for stills; `VIDEO` for decoded video frames or camera livestream. |
+| Outputs | 478 face landmarks per face, 52 blendshape scores if enabled, and transformation matrices if enabled. |
+| Config | `numFaces`, detection/presence/tracking confidence thresholds, `outputFaceBlendshapes`, `outputFacialTransformationMatrixes`. |
+| Performance note | `detect()` and `detectForVideo()` run synchronously and block the UI thread unless placed in a Web Worker. |
+
+ScenarioLab implication: MediaPipe can provide **local, frame-level interaction signals** such as presence, rough attention direction, facial movement, smile-like blendshapes, brow movement, and overall engagement markers. These should be treated as **non-diagnostic interaction telemetry**, not emotional truth.
+
+## Official MediaPipe Gesture Recognizer findings
+
+Source: https://ai.google.dev/edge/mediapipe/solutions/vision/gesture_recognizer/web_js
+
+The MediaPipe Gesture Recognizer web task recognizes hand gestures in real time and provides both recognized gesture results and hand landmarks. It also uses the `@mediapipe/tasks-vision` NPM package. It supports image and video/livestream modes.
+
+Important implementation details:
+
+| Area | Finding |
+| --- | --- |
+| Package | `@mediapipe/tasks-vision` |
+| Model | Example model asset: `https://storage.googleapis.com/mediapipe-tasks/gesture_recognizer/gesture_recognizer.task` |
+| Running modes | `IMAGE` and `VIDEO`. |
+| Outputs | Gesture categories, confidence scores, handedness, and hand landmarks. |
+| Built-in gesture classes | `None`, `Closed_Fist`, `Open_Palm`, `Pointing_Up`, `Thumb_Down`, `Thumb_Up`, `Victory`, `ILoveYou`. |
+| Config | `numHands`, hand detection/presence/tracking confidence thresholds, canned gesture classifier options, custom gesture classifier options. |
+
+ScenarioLab implication: Gesture Recognizer can support **interaction affordances** such as thumbs-up to continue, open palm to pause, or recognizing a user’s visible hand movement during practice. It should not be used to infer intent or emotional state without context.
+
+## Initial architecture conclusion
+
+MediaPipe should fit into ScenarioLab as a **privacy-preserving local signal layer**. It should run in the browser, preferably in a worker, and emit derived, low-resolution events to the ScenarioLab orchestrator. Raw video should not leave the device by default. The architecture should avoid storing face video, face embeddings, raw landmarks, or per-frame blendshape streams unless the user explicitly opts into a research or debugging mode.
+
+Recommended signal policy:
+
+| Signal type | Use in ScenarioLab | Safe storage default |
+| --- | --- | --- |
+| Face present / not present | Pause role-play if camera lost or user opts into presence-based pacing. | Session-only. |
+| User looking away / uncertain attention proxy | Offer optional pause: “Would you like a moment?” | Do not store. |
+| Smile-like or brow movement | Only use for user reflection if explicitly enabled. | Do not store. |
+| Hand gesture command | Pause, continue, retry, choose option. | Store command event only. |
+| Raw landmarks / blendshapes | Debugging or research only with explicit consent. | Off by default. |
+| Emotion labels | Avoid for MVP. | Never store as fact. |

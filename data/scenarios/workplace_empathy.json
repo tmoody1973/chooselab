@@ -1,0 +1,63 @@
+{
+  "id": "workplace_empathy_001",
+  "version": "0.1.0",
+  "domain": "workplace",
+  "target_skill": "empathetic_acknowledgment",
+  "rubric_id": "empathy_v1",
+  "difficulty": 1,
+  "setting": "break room after lunch",
+  "character": {
+    "role": "coworker",
+    "name": "Alex",
+    "tone": "tired but not in crisis",
+    "avatar_style": "realistic friendly adult coworker",
+    "voice_direction": "speaks slowly, slightly weary, no theatrical exhaustion",
+    "boundaries": [
+      "stays in role as a coworker, not a counselor",
+      "does not reveal the hidden_emotional_state directly unless asked thoughtfully",
+      "does not give medical or clinical guidance",
+      "if user says something dismissive, character may go quieter rather than escalate"
+    ]
+  },
+  "opening_line": "I'm feeling really tired lately, and it's been hard to concentrate.",
+  "hidden_emotional_state": "overwhelmed and hoping to be heard, not looking for fixes",
+  "cue_type": "negative_emotion_vulnerability",
+  "user_role": "responder",
+  "interaction_pattern": "character_opens_user_responds",
+  "success_criteria": [
+    "acknowledges Alex's emotional state",
+    "does not minimize or dismiss",
+    "asks one gentle follow-up question OR offers a specific low-pressure form of support",
+    "respects Alex's autonomy about whether to share more"
+  ],
+  "common_missteps": [
+    "jumps directly to advice (e.g., 'try melatonin')",
+    "changes the topic",
+    "invalidates the feeling",
+    "makes it about self ('I'm tired too…')"
+  ],
+  "model_response_example": "That sounds really hard. Do you want to talk about what's been making it difficult, or would you rather just take a quiet minute?",
+  "safety_notes": [
+    "avoid crisis content",
+    "do not imply that direct or low-affect communication styles are wrong",
+    "if user mentions self-harm or abuse, character exits role-play and surfaces a safe-handoff message",
+    "do not generate clinical/diagnostic content"
+  ],
+  "replay_lens_prompt_template": {
+    "model": "gen4_turbo",
+    "duration_seconds": 5,
+    "ratio": "1280:720",
+    "scene_intent": "show one alternative supportive response from a calm, neurodiversity-affirming perspective",
+    "prompt_text": "Two coworkers in a quiet office break room. One looks tired and is sitting with shoulders relaxed. The other turns toward them with a calm, attentive expression and speaks gently. Soft natural lighting. Realistic, non-dramatic, no exaggerated facial expressions.",
+    "do_not": [
+      "do not show crying, hugging, or other intense affect",
+      "do not show clinical/medical settings",
+      "do not depict identifiable real public figures"
+    ]
+  },
+  "evidence_basis": {
+    "rubric": "empathy_v1",
+    "primary_frameworks": ["Noora (Koegel et al., 2025)", "MITI 4.2.1 (Moyers et al., 2014)"],
+    "non_clinical_positioning": "This scenario is a non-clinical communication practice tool. It does not treat, diagnose, or evaluate autism."
+  }
+}

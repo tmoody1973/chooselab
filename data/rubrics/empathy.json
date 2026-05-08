@@ -1,0 +1,134 @@
+{
+  "id": "empathy_v1",
+  "version": "0.1.0",
+  "target_skill": "empathetic_acknowledgment",
+  "scale_per_dimension": "0-2",
+  "max_total": 10,
+  "frameworks": [
+    {
+      "name": "Noora",
+      "citation": "Koegel, L. K., et al. (2025). Using Artificial Intelligence to Improve Empathetic Statements in Autistic Adolescents and Adults: A Randomized Clinical Trial. Journal of Autism and Developmental Disorders.",
+      "url": "https://link.springer.com/article/10.1007/s10803-025-06734-x",
+      "pubmed": "https://pubmed.ncbi.nlm.nih.gov/39954218/",
+      "rationale": "Noora is text-based by construction so it scores verbal content, not warmth or paraverbals. Designed for and tested with autistic users (38% improvement in empathic responses after 4 weeks)."
+    },
+    {
+      "name": "MITI 4.2.1",
+      "citation": "Moyers, T. B., Manuel, J. K., & Ernst, D. (2014). Motivational Interviewing Treatment Integrity Coding Manual 4.2.1. Univ. of New Mexico CASAA.",
+      "url": "https://casaa.unm.edu/assets/docs/miti4_21.pdf",
+      "rationale": "Operationalizes empathy as reflective listening with simple vs. complex reflections. Behavior-counted, content-based, no tone scoring."
+    }
+  ],
+  "dimensions": [
+    {
+      "id": "D1",
+      "name": "Emotional acknowledgement",
+      "framework_source": "Noora",
+      "scoring": {
+        "0": { "label": "Missing", "criteria": "No reference to coworker's stated state.", "example": "You should drink more coffee." },
+        "1": { "label": "Generic", "criteria": "Acknowledges feeling but not specifically.", "example": "That sounds rough." },
+        "2": { "label": "Specific", "criteria": "Names the specific state.", "example": "Being tired and unable to focus is hard." }
+      }
+    },
+    {
+      "id": "D2",
+      "name": "Contextual appropriateness",
+      "framework_source": "Noora",
+      "scoring": {
+        "0": { "label": "Off-topic / hijacking", "criteria": "Off-topic, dismissive, or makes it about self.", "example": "I'm tired too, let me tell you about my week." },
+        "1": { "label": "Tangential pivot", "criteria": "Tangentially related; partial pivot to advice or other topic.", "example": "Have you tried melatonin?" },
+        "2": { "label": "Stays with experience", "criteria": "Stays with the coworker's experience before anything else.", "example": "Thanks for telling me. That sounds like it's been wearing on you." }
+      }
+    },
+    {
+      "id": "D3",
+      "name": "Specificity / reflection quality",
+      "framework_source": "MITI 4.2.1 — simple vs. complex reflection",
+      "scoring": {
+        "0": { "label": "No reflection", "criteria": "No reflection or restatement.", "example": "Mhm." },
+        "1": { "label": "Simple reflection", "criteria": "Restates surface content.", "example": "You're tired." },
+        "2": { "label": "Complex reflection", "criteria": "Names content AND an inferred meaning or impact.", "example": "Sounds like the fatigue is making work harder than usual." }
+      }
+    },
+    {
+      "id": "D4",
+      "name": "Non-judgement / non-fixing",
+      "framework_source": "MI spirit; Noora appropriateness",
+      "scoring": {
+        "0": { "label": "Leads with judgement", "criteria": "Leads with judgement, advice, or solution.", "example": "You need to sleep more." },
+        "1": { "label": "Mixed", "criteria": "Mixes acknowledgement with quick advice.", "example": "That's tough — try going to bed earlier." },
+        "2": { "label": "Acknowledges first", "criteria": "Acknowledges first; offers help only as an option.", "example": "That sounds hard. Want to talk about it, or is there something I can take off your plate?" }
+      }
+    },
+    {
+      "id": "D5",
+      "name": "Invitation / autonomy",
+      "framework_source": "MI: emphasize autonomy",
+      "scoring": {
+        "0": { "label": "Demands disclosure", "criteria": "Demands disclosure or action.", "example": "Tell me what's wrong." },
+        "1": { "label": "Open but vague", "criteria": "Open but vague offer.", "example": "Let me know if you need anything." },
+        "2": { "label": "Specific autonomy-respecting offer", "criteria": "Specific, low-pressure offer that respects autonomy.", "example": "If you want to share more I'm around. No pressure either way." }
+      }
+    }
+  ],
+  "worked_examples": {
+    "strong": [
+      {
+        "label": "S1 — low-affect, direct (neurodivergent-friendly)",
+        "response": "That sounds hard. Tiredness like that makes concentrating really difficult. Let me know if you want me to take anything off your plate.",
+        "scores": { "D1": 2, "D2": 2, "D3": 2, "D4": 2, "D5": 2 },
+        "total": 10,
+        "reasoning": "Names state (D1), stays on-topic (D2), complex reflection naming impact (D3), no advice (D4), specific autonomy-respecting offer (D5). No warmth performance required."
+      },
+      {
+        "label": "S2 — matter-of-fact, brief",
+        "response": "Thanks for telling me. Tired and unfocused is a rough combo.",
+        "scores": { "D1": 2, "D2": 2, "D3": 2, "D4": 2, "D5": 1 },
+        "total": 9,
+        "reasoning": "Direct, factual acknowledgement with a complex reflection (D3) — flat affect is fine."
+      },
+      {
+        "label": "S3 — reflective, longer",
+        "response": "Sounds like it's been building up and the focus part is the worst of it. I appreciate you saying something.",
+        "scores": { "D1": 2, "D2": 2, "D3": 2, "D4": 2, "D5": 1 },
+        "total": 9,
+        "reasoning": "Strong complex reflection inferring a pattern (D3) without performing warmth."
+      }
+    ],
+    "weak": [
+      {
+        "label": "W1 — fixing first",
+        "response": "You should try melatonin and cut out caffeine after 2pm.",
+        "scores": { "D1": 0, "D2": 0, "D3": 0, "D4": 0, "D5": 0 },
+        "total": 0,
+        "reasoning": "Skips D1 acknowledgement; leads with fixing (D4 fail)."
+      },
+      {
+        "label": "W2 — hijacking",
+        "response": "Ugh, I'm exhausted too — last night was brutal for me.",
+        "scores": { "D1": 0, "D2": 0, "D3": 0, "D4": 2, "D5": 1 },
+        "total": 3,
+        "reasoning": "Hijacks the topic (D2 fail); no acknowledgement of their state (D1 fail)."
+      },
+      {
+        "label": "W3 — minimal",
+        "response": "Mhm.",
+        "scores": { "D1": 0, "D2": 1, "D3": 0, "D4": 2, "D5": 0 },
+        "total": 3,
+        "reasoning": "No acknowledgement, no reflection, no offer."
+      }
+    ]
+  },
+  "do_not_score": [
+    "Tone, warmth, or affect — flat or matter-of-fact delivery scores equally to expressive delivery",
+    "Emotional mirroring — user is not required to feel or perform the coworker's emotion",
+    "Eye contact, facial expression, body language — out of scope for text rubric",
+    "Paraverbal cues — pace, prosody, sighs, aw's",
+    "Politeness softeners — 'oh no', 'aww', 'I'm so sorry' are optional, not required",
+    "Length or verbosity — concise responses can score 10/10",
+    "Self-disclosure of similar feelings — neither required nor rewarded; can hurt D2 if it hijacks",
+    "Idiomatic neurotypical phrasing — direct literal language is fully acceptable"
+  ],
+  "evaluator_directive": "If the LLM evaluator finds itself wanting to deduct points for sounding cold, not warm enough, or too blunt — it must not. Re-score on content only.",
+  "attribution": "Workplace empathy rubric grounded in the Stanford HAI Noora framework (Koegel et al., 2025, J. Autism Dev. Disord., doi:10.1007/s10803-025-06734-x) and the MITI 4.2.1 reflective-listening coding system (Moyers, Manuel & Ernst, 2014)."
+}
