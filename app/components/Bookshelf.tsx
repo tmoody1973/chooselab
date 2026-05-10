@@ -2,17 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import { loadBookshelf, type BookshelfEntry } from '@/lib/adventure/bookshelf';
+import { SAMPLE_BOOKSHELF } from '@/lib/adventure/sample-bookshelf';
 
 interface BookshelfProps {
   onOpen: (entry: BookshelfEntry) => void;
 }
 
 export function Bookshelf({ onOpen }: BookshelfProps) {
-  const [entries, setEntries] = useState<BookshelfEntry[]>([]);
+  const [userEntries, setUserEntries] = useState<BookshelfEntry[]>([]);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setEntries(loadBookshelf());
+    setUserEntries(loadBookshelf());
     setLoaded(true);
   }, []);
 
@@ -24,29 +25,59 @@ export function Bookshelf({ onOpen }: BookshelfProps) {
     );
   }
 
-  if (entries.length === 0) {
-    return (
-      <div className="bookshelf-empty">
-        <h2 className="bookshelf-empty-heading">No adventures yet</h2>
-        <p className="bookshelf-empty-text">Make your first story and it will live here. You can come back to read it any time.</p>
-      </div>
-    );
-  }
+  const hasUserEntries = userEntries.length > 0;
 
   return (
-    <div className="bookshelf">
-      {entries.map((entry) => (
-        <button key={entry.id} type="button" className="bookshelf-card" onClick={() => onOpen(entry)}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="bookshelf-cover" src={entry.coverImageUrl} alt={entry.title} />
-          <div className="bookshelf-meta">
-            <h3 className="bookshelf-title">{entry.title}</h3>
-            <p className="bookshelf-sub">with {entry.heroName}</p>
-            <p className="bookshelf-date">{formatDate(entry.createdAt)}</p>
-          </div>
-        </button>
-      ))}
-    </div>
+    <>
+      {hasUserEntries ? (
+        <div className="bookshelf">
+          {userEntries.map((entry) => (
+            <BookshelfCard key={entry.id} entry={entry} onOpen={onOpen} />
+          ))}
+        </div>
+      ) : null}
+
+      <div className="bookshelf-section-divider">
+        <span>{hasUserEntries ? 'Sample stories' : 'Try a sample story'}</span>
+      </div>
+
+      <div className="bookshelf">
+        {SAMPLE_BOOKSHELF.map((entry) => (
+          <BookshelfCard key={entry.id} entry={entry} onOpen={onOpen} isSample />
+        ))}
+      </div>
+
+      {!hasUserEntries ? (
+        <p className="bookshelf-empty-text">
+          When you make your first adventure, it will live here too.
+        </p>
+      ) : null}
+    </>
+  );
+}
+
+function BookshelfCard({
+  entry,
+  onOpen,
+  isSample,
+}: {
+  entry: BookshelfEntry;
+  onOpen: (entry: BookshelfEntry) => void;
+  isSample?: boolean;
+}) {
+  return (
+    <button type="button" className="bookshelf-card" onClick={() => onOpen(entry)}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="bookshelf-cover" src={entry.coverImageUrl} alt={entry.title} />
+      <div className="bookshelf-meta">
+        <h3 className="bookshelf-title">{entry.title}</h3>
+        <p className="bookshelf-sub">
+          with {entry.heroName}
+          {isSample ? <span className="bookshelf-sample-badge">sample</span> : null}
+        </p>
+        <p className="bookshelf-date">{formatDate(entry.createdAt)}</p>
+      </div>
+    </button>
   );
 }
 

@@ -918,6 +918,41 @@ body {
   color: var(--ink-soft);
   max-width: 420px;
   line-height: 1.5;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.bookshelf-section-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0 8px;
+  color: var(--ink-faded);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.bookshelf-section-divider::before,
+.bookshelf-section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.bookshelf-sample-badge {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-warm);
+  background: rgba(184, 92, 45, 0.10);
+  padding: 2px 6px;
+  border-radius: 6px;
 }
 
 /* Saved adventure read-back */
