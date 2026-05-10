@@ -253,6 +253,112 @@ body {
   box-shadow: none;
 }
 
+/* Storyteller (conversational picker) */
+.storyteller-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.storyteller-fallback {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 16px 0;
+}
+
+.storyteller-fallback-text {
+  font-size: 16px;
+  color: var(--ink-soft);
+  text-align: center;
+  font-style: italic;
+}
+
+.storyteller-progress {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.storyteller-progress-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  max-width: 720px;
+}
+
+@media (max-width: 600px) {
+  .storyteller-progress-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.progress-pill {
+  background: var(--paper);
+  border: 1.5px dashed var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.progress-pill-filled {
+  border-style: solid;
+  border-color: var(--accent-warm);
+  background: linear-gradient(180deg, var(--paper) 0%, rgba(184, 92, 45, 0.06) 100%);
+}
+
+.progress-pill-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faded);
+}
+
+.progress-pill-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.progress-pill:not(.progress-pill-filled) .progress-pill-value {
+  color: var(--ink-faded);
+}
+
+.storyteller-skip {
+  font-family: inherit;
+  background: transparent;
+  border: none;
+  color: var(--ink-faded);
+  font-size: 13px;
+  padding: 8px 16px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.storyteller-skip:hover {
+  color: var(--ink);
+}
+
+/* AvatarCall styling adjustments inside the storyteller flow */
+[data-avatar-call] {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 30px -12px var(--paper-shadow-strong);
+  background: var(--paper);
+}
+
 /* Runner — loading */
 .runner-loading {
   display: flex;

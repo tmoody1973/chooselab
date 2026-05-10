@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import type { AdventureSeed } from '@/lib/adventure-types';
 import type { BookshelfEntry } from '@/lib/adventure/bookshelf';
-import { Picker } from '@/components/Picker';
+import { ConversationalPicker } from '@/components/ConversationalPicker';
 import { AdventureRunner } from '@/components/AdventureRunner';
 import { Bookshelf } from '@/components/Bookshelf';
 
@@ -46,7 +46,7 @@ export default function Home() {
         ) : null}
       </header>
 
-      {view.kind === 'home' ? <Picker onStart={startAdventure} /> : null}
+      {view.kind === 'home' ? <ConversationalPicker onStart={startAdventure} /> : null}
 
       {view.kind === 'adventure' ? (
         <AdventureRunner seed={view.seed} onExit={goHome} />
