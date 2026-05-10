@@ -152,12 +152,19 @@ function ConversationalSession({
       avatarId="storyteller-session"
       sessionId={sessionId}
       sessionKey={sessionKey}
-      avatarImageUrl="/storyteller/lyra-photo.png"
+      avatarImageUrl="/storyteller/lyra.png"
       onError={(err) => console.error('Storyteller AvatarCall error:', err)}
     >
-      <AvatarVideo />
+      {/* Visual layer — watercolor Lyra (matches the rest of the app's aesthetic).
+          The realtime AvatarVideo is intentionally NOT rendered: it would show
+          the avatar's reference image which is photorealistic and clashes with
+          the watercolor world. Audio still flows through the AvatarSession. */}
+      <LyraVisual />
+
+      {/* Audio plumbing only — no visual rendering. */}
       <UserVideo />
       <ControlBar showCamera={false} showScreenShare={false} />
+
       <SeedListener
         onSetSetting={(id) => {
           const setting = getSettingById(id);
@@ -186,6 +193,22 @@ function ConversationalSession({
         onSwitchToManual={onSwitchToManual}
       />
     </AvatarCall>
+  );
+}
+
+function LyraVisual() {
+  return (
+    <div className="lyra-visual">
+      <div className="lyra-portrait-frame">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="lyra-portrait" src="/storyteller/lyra.png" alt="Lyra, the storyteller" />
+        <span className="lyra-pulse" aria-hidden="true" />
+      </div>
+      <div className="lyra-caption">
+        <span className="lyra-name">Lyra</span>
+        <span className="lyra-status">your story buddy</span>
+      </div>
+    </div>
   );
 }
 
