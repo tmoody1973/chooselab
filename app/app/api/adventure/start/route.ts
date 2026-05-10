@@ -6,6 +6,8 @@ import {
   buildArchitectUserPrompt,
 } from '@/lib/adventure/prompts';
 
+export const maxDuration = 60;
+
 interface StartAdventureRequest {
   seed: AdventureSeed;
 }

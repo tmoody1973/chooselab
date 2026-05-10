@@ -1,6 +1,8 @@
 import RunwayML from '@runwayml/sdk';
 import { ADVENTURE, RUNWAY_MODELS, STORY_GUIDE, TIMEOUTS_MS } from '@/lib/constants';
 
+export const maxDuration = 300;
+
 interface AssetsRequest {
   imagePrompt: string;
   ambientSoundPrompt: string;

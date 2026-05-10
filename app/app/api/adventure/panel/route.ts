@@ -7,6 +7,8 @@ import {
   buildPanelImagePrompt,
 } from '@/lib/adventure/prompts';
 
+export const maxDuration = 60;
+
 interface PanelRequest {
   arc: StoryArc;
   panelIndex: number;

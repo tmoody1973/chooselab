@@ -3,6 +3,8 @@ import type { StoryArc } from '@/lib/adventure-types';
 import { ADVENTURE, RUNWAY_MODELS, TIMEOUTS_MS } from '@/lib/constants';
 import { buildTitleImagePrompt } from '@/lib/adventure/prompts';
 
+export const maxDuration = 120;
+
 interface CoverRequest {
   arc: StoryArc;
 }

@@ -2,6 +2,8 @@ import Runway from '@runwayml/sdk';
 import { RUNWAY_MODELS, STORY_GUIDE, TIMEOUTS_MS } from '@/lib/constants';
 import { STORYTELLER_TOOL_DEFINITIONS } from '@/lib/adventure/storyteller-tools';
 
+export const maxDuration = 120;
+
 const client = new Runway({ apiKey: process.env.RUNWAYML_API_SECRET });
 
 const TERMINAL_FAILURE_STATUSES = new Set(['COMPLETED', 'FAILED', 'CANCELLED']);
