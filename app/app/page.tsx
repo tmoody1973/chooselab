@@ -1,7 +1,13 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, Suspense } from 'react';
-import { AvatarCall, type TranscriptionEntry } from '@runwayml/avatars-react';
+import {
+  AvatarCall,
+  AvatarVideo,
+  UserVideo,
+  ControlBar,
+  type TranscriptionEntry,
+} from '@runwayml/avatars-react';
 import '@runwayml/avatars-react/styles.css';
 import { SCENARIOS, type Scenario } from '@/lib/scenarios';
 import { TranscriptCapture } from '@/components/TranscriptCapture';
@@ -180,6 +186,9 @@ export default function Home() {
                     setStage('error');
                   }}
                 >
+                  <AvatarVideo />
+                  <UserVideo />
+                  <ControlBar />
                   <TranscriptCapture onChange={handleTranscriptChange} />
                 </AvatarCall>
               </Suspense>
