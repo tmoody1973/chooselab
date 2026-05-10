@@ -4,7 +4,7 @@
 
 Built for the **Runway API Hackathon** (May 8-11, 2026).
 
-🎬 **Live demo:** https://app-tmoody1973s-projects.vercel.app/ *(deployment protection toggle pending)*
+🎬 **Live demo:** https://chooselab-tmoody1973s-projects.vercel.app/
 📦 **Repo:** https://github.com/tmoody1973/chooselab
 
 ---
