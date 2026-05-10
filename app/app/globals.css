@@ -218,11 +218,12 @@ body {
   inset: 0;
   background: rgba(0, 0, 0, 0.9);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 24px;
   z-index: 100;
   animation: fadeIn 0.2s ease;
+  overflow-y: auto;
 }
 
 @media (max-width: 600px) {
@@ -240,6 +241,8 @@ body {
   width: 100%;
   max-width: 800px;
   animation: slideUp 0.25s ease;
+  margin: auto 0;
+  padding-bottom: 24px;
 }
 
 
