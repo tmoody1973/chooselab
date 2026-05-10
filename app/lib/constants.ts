@@ -60,11 +60,10 @@ export const STORY_GUIDE = {
   voicePresetId: 'Eleanor',
   /** Realtime avatar voice (gwm1_avatars uses different preset names than TTS). */
   realtimeVoicePresetId: 'clara',
-  /** Lyra — the conversational storyteller who picks the adventure with the kid via realtime tool calls.
-   *  Note: backed by the avatar with this ID (originally created for ScenarioLab v1; PATCHed with Lyra's
-   *  storyteller persona for V2). The avatar's reference image is a friendly Black woman; the UI fallback
-   *  shows a different watercolor portrait until the realtime stream connects. */
-  lyraAvatarId: 'e6c8e3f2-ae0b-4aeb-98c8-ea217a2d3827',
+  /** Lyra — Pixar-style 3D character who picks the adventure with the kid via realtime tool calls.
+   *  Created 2026-05-10 from a gen4_image Pixar-style portrait. Stylized enough to fit a kids' world,
+   *  realistic enough that Runway's avatar processor accepts the face. Voice clara (warm). */
+  lyraAvatarId: 'f70d673b-2bcd-44a7-9ad9-d56f70d79d14',
   fallbackName: 'Lyra',
   defaultGreeting:
     "Hi! I'm Lyra. Want to make an adventure together?",

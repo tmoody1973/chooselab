@@ -254,45 +254,12 @@ body {
 }
 
 /* Storyteller (conversational picker) */
-.lyra-visual {
+.lyra-stage {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  padding: 24px 0 8px;
-}
-
-.lyra-portrait-frame {
-  position: relative;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid var(--accent-warm);
-  background: var(--paper);
-  box-shadow: 0 12px 30px -10px var(--paper-shadow-strong);
-}
-
-.lyra-portrait {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 30%;
-}
-
-.lyra-pulse {
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 3px solid var(--accent-warm);
-  opacity: 0.5;
-  animation: lyra-pulse 2.4s ease-out infinite;
-  pointer-events: none;
-}
-
-@keyframes lyra-pulse {
-  0% { transform: scale(1); opacity: 0.6; }
-  100% { transform: scale(1.18); opacity: 0; }
+  gap: 12px;
+  padding: 8px 0;
 }
 
 .lyra-caption {
@@ -300,6 +267,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 2px;
+  margin-top: 12px;
 }
 
 .lyra-name {
@@ -315,15 +283,41 @@ body {
   font-style: italic;
 }
 
-/* Hide the realtime video chrome we don't want visible — UserVideo and ControlBar
-   still mount for audio plumbing and end-call controls but we keep them small/subtle. */
+/* AvatarCall — keep the realtime video VISIBLE (it's the animated Pixar Lyra
+   talking to the kid). Style the container as a circular framed stage. */
+[data-avatar-call] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0 16px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
 [data-avatar-call] [data-avatar-video] {
-  display: none !important;
+  width: min(360px, 80vw);
+  height: min(360px, 80vw);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--accent-warm);
+  background: var(--paper);
+  box-shadow: 0 16px 40px -12px var(--paper-shadow-strong);
+  position: relative;
+}
+
+[data-avatar-call] [data-avatar-video] video,
+[data-avatar-call] [data-avatar-video] img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  object-position: center 30%;
 }
 
 [data-avatar-call] [data-avatar-user-video] {
   position: fixed;
-  bottom: 16px;
+  bottom: 88px;
   right: 16px;
   width: 96px;
   height: 96px;
@@ -345,12 +339,6 @@ body {
   border-radius: 999px;
   border: 1px solid var(--border);
   box-shadow: 0 8px 18px -8px var(--paper-shadow-strong);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .lyra-pulse {
-    animation: none;
-  }
 }
 
 .storyteller-loading {
