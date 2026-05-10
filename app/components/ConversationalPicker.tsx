@@ -7,6 +7,7 @@ import {
   UserVideo,
   ControlBar,
   useClientEvent,
+  useTranscription,
   clientTool,
 } from '@runwayml/avatars-react';
 import '@runwayml/avatars-react/styles.css';
@@ -134,6 +135,11 @@ function ConversationalSession({
   const seedRef = useRef(seed);
   seedRef.current = seed;
 
+  // Track whether the kid has actually spoken. Tool fires before this is
+  // true are ignored — Lyra sometimes fires set_setting / set_hero on her
+  // OWN list-of-options speech before the kid has had a chance to answer.
+  const userHasSpokenRef = useRef(false);
+
   const tryStart = useCallback(
     (latest: { setting?: Setting; hero?: Hero; problem?: Problem }) => {
       if (latest.setting && latest.hero && latest.problem) {
@@ -165,11 +171,18 @@ function ConversationalSession({
       <UserVideo />
       <ControlBar showCamera={false} showScreenShare={false} />
 
+      <UserSpeechSentinel onUserSpoke={() => { userHasSpokenRef.current = true; }} />
+
       <SeedListener
         onSetSetting={(id) => {
-          // Defensive lock: ignore fires after this pick is already set.
-          // Lyra sometimes fires the tool when SHE lists the options, before
-          // the kid actually answers. Lock the first fire and ignore the rest.
+          // Two-layer defense:
+          //  1. Drop the fire if the kid hasn't spoken at all yet (Lyra fires
+          //     this tool on her own opening list-of-options speech).
+          //  2. Lock once filled — ignore subsequent fires of the same tool.
+          if (!userHasSpokenRef.current) {
+            console.warn('[picker] dropped set_setting fire — user has not spoken yet');
+            return;
+          }
           if (seedRef.current.setting) return;
           const setting = getSettingById(id);
           if (!setting) return;
@@ -178,6 +191,10 @@ function ConversationalSession({
           tryStart(next);
         }}
         onSetHero={(id) => {
+          if (!userHasSpokenRef.current) {
+            console.warn('[picker] dropped set_hero fire — user has not spoken yet');
+            return;
+          }
           if (seedRef.current.hero) return;
           const hero = getHeroById(id);
           if (!hero) return;
@@ -186,6 +203,10 @@ function ConversationalSession({
           tryStart(next);
         }}
         onSetProblem={(id) => {
+          if (!userHasSpokenRef.current) {
+            console.warn('[picker] dropped set_problem fire — user has not spoken yet');
+            return;
+          }
           if (seedRef.current.problem) return;
           const problem = getProblemById(id);
           if (!problem) return;
@@ -212,6 +233,26 @@ function LyraStage() {
       </div>
     </div>
   );
+}
+
+function UserSpeechSentinel({ onUserSpoke }: { onUserSpoke: () => void }) {
+  // Listens for transcription segments from any participant whose identity
+  // does NOT include 'avatar' or 'agent' — that's the kid. The first time
+  // we see kid-side speech, fire the callback (it just flips a ref to true).
+  useTranscription(
+    (entry) => {
+      const identity = entry.participantIdentity ?? '';
+      const isAvatar =
+        identity.toLowerCase().includes('avatar') ||
+        identity.toLowerCase().includes('agent') ||
+        identity.toLowerCase().includes('lyra');
+      if (!isAvatar) {
+        onUserSpoke();
+      }
+    },
+    { interim: true }
+  );
+  return null;
 }
 
 function SeedListener({
