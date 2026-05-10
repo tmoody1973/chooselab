@@ -17,6 +17,27 @@
       "citation": "Autistic Self Advocacy Network (2013). Navigating College: A Handbook on Self-Advocacy Written for Autistic Students from Autistic Adults.",
       "url": "https://autisticadvocacy.org/wp-content/uploads/2014/01/NavcollFinal.pdf",
       "rationale": "Written by autistic adults; emphasizes clear, direct disclosure of needs and concrete logistics over neurotypical social warmup. Governs tone scoring: clarity beats softening."
+    },
+    {
+      "name": "Disclosure decisions carry real costs",
+      "citation": "Lindsay, S., Cagliostro, E., & Carafa, G. (2018). A systematic review of workplace disclosure and accommodation requests among youth and young adults with disabilities. Disability and Rehabilitation, 40(25), 2971-2986.",
+      "url": "https://doi.org/10.1080/09638288.2017.1363828",
+      "pubmed": "https://pubmed.ncbi.nlm.nih.gov/28797182/",
+      "rationale": "Disclosure has documented downstream costs (job offer rates, social judgment). The user is NOT required to name a diagnosis to satisfy D2. ADA Title I (42 U.S.C. § 12112) requires only that the user request reasonable accommodation. Score the ask, not the disclosure choice."
+    },
+    {
+      "name": "Direct asks are the target behavior, not 'rude'",
+      "citation": "Heasman, B., & Gillespie, A. (2019). Neurodivergent intersubjectivity: Distinctive features of how autistic people create shared understanding. Autism, 23(4), 910-921.",
+      "url": "https://doi.org/10.1177/1362361318785172",
+      "pubmed": "https://pubmed.ncbi.nlm.nih.gov/30073872/",
+      "rationale": "Distinctive autistic interaction features include 'generous assumption of common ground' and 'low demand for coordination' — brevity and skipped warmup are functional, not deficient. Reinforces I PLAN's existing 'directness is the target' position."
+    },
+    {
+      "name": "Camouflaging carries mental health costs",
+      "citation": "Hull, L., Petrides, K. V., Allison, C., Smith, P., Baron-Cohen, S., Lai, M.-C., & Mandy, W. (2017). 'Putting on My Best Normal': Social camouflaging in adults with autism spectrum conditions. J. Autism Dev. Disord., 47(8), 2519-2534. (See also van der Putten et al. 2024 — camouflaging in ADHD adults.)",
+      "url": "https://doi.org/10.1007/s10803-017-3166-5",
+      "pubmed": "https://pubmed.ncbi.nlm.nih.gov/28527095/",
+      "rationale": "Camouflaging is associated with exhaustion, anxiety, depression, suicidality. The rubric must not reward 'polished' delivery as a proxy for skill — it may be camouflage."
     }
   ],
   "dimensions": [
@@ -121,14 +142,18 @@
   },
   "do_not_score": [
     "Absence of apology or apologetic framing — 'Sorry to bother you' adds nothing to D1-D5",
-    "Absence of social warmup or small talk — skipping 'Hope your weekend was good!' is not a deduction",
+    "Absence of social warmup or small talk — skipping 'Hope your weekend was good!' is not a deduction (Heasman & Gillespie 2019: low demand for coordination is functional, not deficient)",
     "Absence of softening/hedging language — 'just', 'maybe', 'kind of', 'a little' are not required and often hurt D1",
     "Brevity — a 2-sentence direct ask that hits D1+D2+D3 outscores a 6-sentence padded one",
     "Lack of eye-contact, tone-of-voice, or facial-expression performance — out of scope (text rubric)",
-    "Disclosure depth — user is NOT required to name a diagnosis. 'I have a documented disability and a DRC letter' satisfies D2 just as well as naming the condition",
+    "Disclosure depth — user is NOT required to name a diagnosis. 'I have a documented disability and a DRC letter' satisfies D2 just as well as naming the condition (ADA Title I; Lindsay et al. 2018)",
+    "Disclosure penalty — naming a specific diagnosis is also valid; do not score the disclosure decision in either direction",
     "Neurotypical warmth markers (exclamation points, smiley emoji, 'hope you're well!') — their absence is neutral",
-    "Whether the request will be granted — we score the ask, not the outcome"
+    "Anxious affect markers in the transcript (typing speed, exclamation points, 'lol', trailing dots, emoji) — these are not D1-D5 signals and often track RSD or autistic anxiety in writing (Beheshti et al. 2020; Hull et al. 2017)",
+    "Camouflaging-style polish — smooth narrative delivery is not better content (Hull et al. 2017; van der Putten et al. 2024). A direct ask without performative warmth scores fully",
+    "Whether the request will be granted — we score the ask, not the outcome",
+    "'Confidence' or 'presence' in the writing — these are NT thin-slice constructs (Sasson et al. 2017) that have no correlation with self-advocacy validity"
   ],
-  "evaluator_directive": "If the evaluator finds itself wanting to deduct points for tone seemed cold or didn't apologize enough, it should re-check D4: D4 only deducts for hostility or blame, never for directness.",
-  "attribution": "School self-advocacy rubric grounded in the Self-Advocacy Strategy (I PLAN) — Van Reusen, Bos, Schumaker & Deshler (2002, rev. 2007), University of Kansas Center for Research on Learning — and tone-calibrated against ASAN's Navigating College: A Handbook on Self-Advocacy Written for Autistic Students from Autistic Adults (2013)."
+  "evaluator_directive": "If the evaluator finds itself wanting to deduct points because the tone seemed cold, the user didn't apologize enough, or the ask felt 'demanding' — it must not. D4 only deducts for HOSTILITY or BLAME (e.g., 'You never explain assignments clearly'), never for directness. ASAN's Navigating College and the I PLAN evidence base (Van Reusen et al. 1994, 2002) both treat directness as the target behavior, not a deficit. If the user names accommodation needs without naming a diagnosis, score D2 the same as a diagnosis-named version — disclosure decisions carry real costs (Lindsay et al. 2018) and are the user's choice. Do not reward 'softened' or 'polished' delivery over direct delivery — that biases toward camouflaging (Hull et al. 2017; Beck et al. 2020), which has documented mental health costs.",
+  "attribution": "School self-advocacy rubric grounded in the Self-Advocacy Strategy (I PLAN) — Van Reusen, Bos, Schumaker & Deshler (2002, rev. 2007), University of Kansas Center for Research on Learning — tone-calibrated against ASAN's Navigating College (2013), informed by Heasman & Gillespie (2019) on autistic intersubjectivity, Lindsay et al. (2018) on disclosure costs, and Hull et al. (2017) + van der Putten et al. (2024) on camouflaging."
 }

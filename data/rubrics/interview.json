@@ -31,13 +31,46 @@
       "citation": "AskEARN — Including Neurodivergent Workers: Job Descriptions and Interviewing.",
       "url": "https://askearn.org/page/neurodiversity-job-descriptions-and-interviewing",
       "rationale": "U.S. DOL-funded Employer Assistance and Resource Network on Disability Inclusion."
+    },
+    {
+      "name": "Thin-slice bias is style-driven, not content-driven",
+      "citation": "Sasson, N. J., Faso, D. J., Nugent, J., Lovell, S., Kennedy, D. P., & Grossman, R. B. (2017). Neurotypical peers are less willing to interact with those with autism based on thin slice judgments. Scientific Reports, 7:40700. (Reinforced by Whelpley & May, 2023, J. Autism Dev. Disord., PMID 35294714.)",
+      "url": "https://doi.org/10.1038/srep40700",
+      "pubmed": "https://pubmed.ncbi.nlm.nih.gov/28145411/",
+      "rationale": "When evaluators see only transcripts (no audio/video), thin-slice bias against autistic candidates disappears. This is direct empirical justification for scoring content only — never 'confidence', 'executive presence', 'energy', or 'polish'."
+    },
+    {
+      "name": "ADHD time-perception impairment",
+      "citation": "Weissenberger, S., et al. (2021). Time perception is a focal symptom of attention-deficit/hyperactivity disorder in adults. Frontiers in Psychiatry, 12:680236. (Review: Nejati & Yazdani, 2023, Brain Sciences 13(2):255, PMID 36833791.)",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8293837/",
+      "rationale": "Interval reproduction and estimation are measurably impaired in adult ADHD. Reward concrete anchors (year, project, role, team) without requiring exact dates or durations."
+    },
+    {
+      "name": "ADHD associative-thought variance",
+      "citation": "Kucyi, A., et al. (2025). Hyperactive ADHD symptoms are associated with increased variability in thought content in less constrained contexts. Scientific Reports, 15.",
+      "url": "https://doi.org/10.1038/s41598-025-93053-x",
+      "rationale": "Tangents in ADHD often associatively connect and surface relevant context. A tangent that ultimately lands all four STAR elements is not a deduction. Penalize only failure to deliver the required content (e.g., no Result), not the path taken to get there."
+    },
+    {
+      "name": "Working memory + response inhibition (Barkley EF model)",
+      "citation": "Barkley, R. A. (1997). Behavioral inhibition, sustained attention, and executive functions: Constructing a unifying theory of ADHD. Psychological Bulletin, 121(1), 65-94. (Updated 2022, Applied Neuropsychology: Adult, doi:10.1080/23279095.2022.2158441.)",
+      "url": "https://doi.org/10.1037/0033-2909.121.1.65",
+      "pubmed": "https://pubmed.ncbi.nlm.nih.gov/9000892/",
+      "rationale": "Holding the question while building a response is genuinely harder under ADHD. Reward asking for a re-read, taking a beat, restating the prompt, or labeling structure ('Situation: ...') — these are valid working-memory supports."
+    },
+    {
+      "name": "Autism vs. ADHD social signatures",
+      "citation": "Antshel, K. M., & Russo, N. (2019). Autism Spectrum Disorders and ADHD: Overlapping phenomenology, diagnostic issues, and treatment considerations. Current Psychiatry Reports, 21(5), 34.",
+      "url": "https://doi.org/10.1007/s11920-019-1020-5",
+      "pubmed": "https://pubmed.ncbi.nlm.nih.gov/30903299/",
+      "rationale": "ADHD social difficulty is often the PRESENCE of culturally non-normative behaviors (interrupting, intrusion); autism social difficulty is often the ABSENCE of expected social initiations. Don't conflate the two and don't penalize either pattern when content is correct."
     }
   ],
   "dimensions": [
     {
       "id": "D1",
       "name": "Clarification when prompt is vague",
-      "framework_source": "Maras 2020 (explicit/multi-part questions); Levashina 2014 (probing)",
+      "framework_source": "Maras 2021 (explicit/multi-part questions); Levashina 2014 (probing)",
       "scoring": {
         "0": { "label": "Ignores ambiguity", "criteria": "Ignores ambiguity; answers a question that wasn't asked.", "example": "Sure, here's a story…" },
         "1": { "label": "Notices but proceeds", "criteria": "Notices vagueness but proceeds without resolving it.", "example": "I guess you mean at work — I'll go with that." },
@@ -57,7 +90,7 @@
     {
       "id": "D3",
       "name": "Specificity (concrete > general)",
-      "framework_source": "Maras 2020 (provide examples, give details); Levashina 2014 (content-based scales)",
+      "framework_source": "Maras 2021 (provide examples, give details); Levashina 2014 (content-based scales)",
       "scoring": {
         "0": { "label": "Generalities only", "criteria": "Generalities only.", "example": "I'm a team player and I always communicate well." },
         "1": { "label": "Mixed", "criteria": "Mixes one concrete detail with generalities." },
@@ -130,17 +163,22 @@
     ]
   },
   "do_not_score": [
-    "Narrative polish, story arc, or engaging delivery",
-    "Emotional expressiveness, warmth, charisma, executive presence",
+    "Narrative polish, story arc, or engaging delivery — score what the answer contains, not how it flows",
+    "Emotional expressiveness, warmth, charisma, executive presence, 'confidence' — these are NT thin-slice constructs (Sasson et al. 2017; Whelpley & May 2023) and have no correlation with structured-interview validity",
     "Small talk, rapport-building openers, tone-matching the interviewer",
     "Eye-contact references, body-language descriptions, vocal variety",
-    "Verbosity or word count — a 60-word literal answer can score 8/8",
+    "Verbosity or word count — a 60-word literal answer can score 8/8. A long, deeply on-topic answer (monotropism: Murray et al. 2005) also scores 8/8",
     "Hedging language vs. confident language ('I think…' vs. 'I did…') — score the content, not the register",
-    "Disclosure or non-disclosure of neurodivergence — both are valid; score neither up nor down",
+    "Disclosure or non-disclosure of neurodivergence — both are valid; score neither up nor down (Whelpley et al. 2025 show disclosure only helps with trained interviewers; it is the user's choice)",
     "Use of 'I' vs. 'we' — score whether the action is concrete, not the pronoun",
     "Asking a clarifying question — this is rewarded in D1, never penalized as not knowing the answer",
-    "Pauses, 'let me think', or requesting to re-read the prompt"
+    "Pauses, 'let me think', or requesting to re-read the prompt — Barkley (1997, 2022) working-memory model: these are valid scaffolds, not weakness",
+    "Time-precision in dates or durations — reward concrete anchors (year, project, role, team) without requiring exact dates (Weissenberger et al. 2021; Nejati & Yazdani 2023). 'In 2024 on the QA team' is fully specific",
+    "Explicit STAR-element labeling — saying 'Situation: ... Task: ... Action: ... Result: ...' is a valid working-memory scaffold and scores D2 = 2 fully (Maras et al. 2021)",
+    "Tangential thinking when the answer ultimately lands all four STAR elements — associative thought is valid (Kucyi et al. 2025); penalize only missing STAR content, not the path",
+    "Camouflaging-style polish — smooth, conventional narrative is not better content (Hull et al. 2017; van der Putten et al. 2024). Score the content; do not bonus the camouflage",
+    "ADHD-pattern interruption to clarify or restate — Antshel & Russo (2019): interrupting one's own answer to anchor a fact is interest-driven engagement, not rudeness"
   ],
-  "evaluator_directive": "None of the do_not_score items correlate with structured-interview validity (Levashina et al., 2014), and several actively penalize autistic communication styles (Maras et al., 2020). If you find yourself wanting to deduct for any of them, re-score on content only.",
-  "attribution": "Interview response rubric grounded in past-behavior structured interviewing (Campion, Pursell, & Brown, 1988; Levashina, Hartwell, Morgeson, & Campion, 2014) with neurodiversity-affirming adaptations from Maras et al. (2021, Autism)."
+  "evaluator_directive": "None of the do_not_score items correlate with structured-interview validity (Levashina et al., 2014; Campion et al., 1988), and several actively penalize neurodivergent communication patterns (Maras et al., 2021; Sasson et al. 2017; Whelpley & May 2023). If you find yourself wanting to deduct for any of them, re-score on content only. Score the four STAR elements regardless of order, prosodic delivery, or whether the candidate explicitly labels them — a labeled bullet list of S/T/A/R is a FULL answer (D2 = 2). Reward the clarification turn (D1 = 2) when the user asks for the prompt to be re-read or asks 'do you mean X or Y' — Maras et al. 2021 showed adapted/explicit questions removed most of the autism rating gap, so the clarification is the rubric's target behavior.",
+  "attribution": "Interview response rubric grounded in past-behavior structured interviewing (Campion, Pursell & Brown, 1988; Levashina, Hartwell, Morgeson & Campion, 2014), neurodiversity-affirming adaptations from Maras et al. (2021, Autism, doi:10.1177/1362361320981319), Sasson et al. 2017 (Sci. Rep.) on transcript-based bias removal, ADHD time-perception research (Weissenberger et al. 2021), and the Barkley (1997, 2022) executive-function model. Disclosure framing informed by Whelpley & May (2023) and Whelpley et al. (2025)."
 }

@@ -211,25 +211,61 @@ Rules for "strength" and "nextStep":
 - "nextStep" must NOT criticize tone, warmth, affect, eye contact, or politeness — score on content only.
 - If the user already scored ${rubric.max_total}/${rubric.max_total}, "nextStep" should be a stretch ("To go even further, try..."), never invented criticism.
 
+# CRITICAL: RSD-aware feedback delivery (read before composing strength/nextStep)
+The user is likely autistic, ADHD, or AuDHD. Rejection-Sensitive Dysphoria (Bisby et al. 2024) and the criticism-sensitivity literature (Beaton et al. 2022) mean the FRAMING of feedback determines whether the user can act on it or shuts down. Apply these standards to BOTH strength and nextStep:
+
+FAVOR:
+- Behavior-specific, situated descriptions tied to a rubric dimension. Example: "In your second sentence you went straight to a fix. Adding one sentence acknowledging her tiredness first hits D1."
+- Affirm what worked first, in the strength field. Then name a single, specific gap with a concrete next attempt in nextStep.
+- Plain-English, concrete, literal language. Quote what the user actually said when possible.
+- Optionality framing where appropriate: "If you want a more conventional register, you could add… — both versions can score ${rubric.max_total}/${rubric.max_total}."
+
+BANNED LANGUAGE — never produce, in either strength or nextStep:
+- Global trait labels about the user: "you came across as cold", "blunt", "awkward", "scattered", "unconfident", "rude", "robotic", "rushed", "flat", "stiff". These are pure RSD trigger language and exactly what Sasson et al. 2017 thin-slice bias attacks. Score behavior, never character.
+- Warmth/affect coaching: "try to sound more empathetic", "add some warmth", "soften your tone", "be more emotional", "show more feeling", "smile more". This coaches camouflaging (Hull et al. 2017; Beck et al. 2020) and contradicts our content-only rubric.
+- Confidence/polish/presence coaching: "be more confident", "more energy", "more polish", "more executive presence". These are NT thin-slice constructs (Sasson 2017) with zero correlation to interview validity.
+- Inferred intent/character: "it sounded like you were rushing", "you didn't seem to care", "you came off as ___". Content-only scoring forbids this — you cannot read the user's mind from a transcript.
+- Comparisons to "what most people do" or "neurotypical expectations" or "social norms" — Crompton et al. 2020a/b show that's a dyad property, not a user property.
+- Implicit demand to apologize, soften, or pad — contradicts ASAN 2013, I PLAN, and the Heasman & Gillespie 2019 finding on autistic intersubjectivity.
+
 # CRITICAL: nextStep must be EXACTLY ONE action — strict format
-The "nextStep" field is the single most important user-facing output. Strict format:
 - ONE sentence. Maximum 30 words.
 - ONE concrete action the user can take next time. Not two. Not "and also". Not "while also".
-- BANNED phrases (rewrite if any appear): "and also", "and try", "and then", "while also", "additionally", "you could also", "another thing", "alongside", "in addition". If your draft contains any of these, you have written multi-part advice — collapse to the single highest-impact action.
+- BANNED phrases (rewrite if any appear): "and also", "and try", "and then", "while also", "additionally", "you could also", "another thing", "alongside", "in addition". Collapse to the single highest-impact action.
 - BANNED structure: lists, semicolons connecting two actions, comma-separated action pairs ("ask X, and offer Y").
-- If the user has multiple things to improve, pick the ONE that would lift the lowest-scoring dimension closest to a 2/2.
+- If the user has multiple things to improve, pick the ONE that would lift the lowest-scoring dimension closest to its max.
+- Tie the nextStep to a specific rubric dimension when possible: "On D3 (specificity), try…"
 
 Good nextStep examples (single action, specific, neurodivergent-affirming):
-- "Try naming the specific feeling Alex described — for example, 'Tired and unfocused is a rough combo' — before you offer support."
+- "On D1 (acknowledgment), try naming the specific feeling Alex described — for example, 'Tired and unfocused is a rough combo' — before offering support."
 - "Open with the concrete ask first: 'I need a 48-hour extension on the Wednesday paper.' Reasons can come second."
-- "Add one specific number, role, or tool to your example so the interviewer can see the action you took."
+- "On D3 (specificity), add one number, tool, or role to your example — for instance, 'cut regression time from 4h to 90min' — so the interviewer can see the concrete action."
 
-Bad nextStep examples (multi-part — DO NOT produce these):
+Bad nextStep examples (DO NOT produce these):
 - "Try acknowledging Alex's feeling specifically, and also offer to help with their workload." (two actions)
-- "Be more specific in your ask, and use a softer tone to make it less awkward." (two actions + tone-policing)
+- "Be more specific in your ask, and use a softer tone to make it less awkward." (two actions + tone-policing — banned twice)
 - "Cover the Action and Result parts of STAR clearly; you could also mention a specific outcome number." (two actions)
+- "Sound more confident and direct in your delivery." (banned trait language + tone coaching)
+- "It came across as a bit cold, so try adding warmth." (banned trait label + warmth coaching)
 
-Final check before returning JSON: read your nextStep aloud. If you can split it on "and" into two complete actions, rewrite as ONE.`;
+Good strength examples:
+- "You named the specific emotional state ('tiredness') and its concrete impact ('makes concentrating really difficult'), then offered low-pressure practical support — that's complex reflection (D3) plus autonomy-respecting offer (D5)."
+- "You stated the ask, the reason, and a concrete proposal in three sentences with no apology padding — that's I PLAN's target behavior (D1+D2+D3 all 2)."
+- "You labeled all four STAR elements explicitly. That's a valid working-memory scaffold and earns full D2."
+
+Bad strength examples (DO NOT produce these):
+- "Great job!" (generic, not specific)
+- "You did well at acknowledging." (generic, no quote, no dimension)
+- "You showed empathy." (trait language without behavior anchor)
+
+Final check before returning JSON: read both fields aloud.
+1. Did I use any banned trait language? If yes, rewrite using behavior + dimension.
+2. Did I coach tone, warmth, confidence, or polish? If yes, rewrite using content only.
+3. Can nextStep split on "and" into two complete actions? If yes, rewrite as ONE.
+4. Is strength specific enough that the user could quote it back to themselves? If not, add a transcript anchor.
+
+# Scientific framing for the user (do not include in output, just inform tone)
+The text-rubric surface ScenarioLab uses is empirically the more equitable channel — Sasson et al. 2017 (Sci. Rep. 7:40700) showed that thin-slice bias against autistic adults disappears when evaluators see only transcripts. You are scoring exactly what the user produced. That is the point.`;
 }
 
 function buildUserPrompt(scenario: Scenario, transcriptText: string): string {
