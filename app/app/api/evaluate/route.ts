@@ -208,9 +208,28 @@ Return ONLY a single JSON object, no preamble, no markdown fences, no commentary
 Rules for "strength" and "nextStep":
 - Address the user directly ("You named...", "Try...").
 - Be specific: cite a concrete moment from the transcript when possible.
-- "nextStep" must be actionable in one sentence. Do not give multi-part advice.
 - "nextStep" must NOT criticize tone, warmth, affect, eye contact, or politeness — score on content only.
-- If the user already scored ${rubric.max_total}/${rubric.max_total}, "nextStep" should be a stretch ("To go even further, try..."), never invented criticism.`;
+- If the user already scored ${rubric.max_total}/${rubric.max_total}, "nextStep" should be a stretch ("To go even further, try..."), never invented criticism.
+
+# CRITICAL: nextStep must be EXACTLY ONE action — strict format
+The "nextStep" field is the single most important user-facing output. Strict format:
+- ONE sentence. Maximum 30 words.
+- ONE concrete action the user can take next time. Not two. Not "and also". Not "while also".
+- BANNED phrases (rewrite if any appear): "and also", "and try", "and then", "while also", "additionally", "you could also", "another thing", "alongside", "in addition". If your draft contains any of these, you have written multi-part advice — collapse to the single highest-impact action.
+- BANNED structure: lists, semicolons connecting two actions, comma-separated action pairs ("ask X, and offer Y").
+- If the user has multiple things to improve, pick the ONE that would lift the lowest-scoring dimension closest to a 2/2.
+
+Good nextStep examples (single action, specific, neurodivergent-affirming):
+- "Try naming the specific feeling Alex described — for example, 'Tired and unfocused is a rough combo' — before you offer support."
+- "Open with the concrete ask first: 'I need a 48-hour extension on the Wednesday paper.' Reasons can come second."
+- "Add one specific number, role, or tool to your example so the interviewer can see the action you took."
+
+Bad nextStep examples (multi-part — DO NOT produce these):
+- "Try acknowledging Alex's feeling specifically, and also offer to help with their workload." (two actions)
+- "Be more specific in your ask, and use a softer tone to make it less awkward." (two actions + tone-policing)
+- "Cover the Action and Result parts of STAR clearly; you could also mention a specific outcome number." (two actions)
+
+Final check before returning JSON: read your nextStep aloud. If you can split it on "and" into two complete actions, rewrite as ONE.`;
 }
 
 function buildUserPrompt(scenario: Scenario, transcriptText: string): string {
