@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { loadRubricForScenario, type Rubric, type Scenario } from '@/lib/load-rubric';
+import { CLAUDE_MODELS, EVALUATOR } from '@/lib/constants';
 
 interface TranscriptEntry {
   id: string;
@@ -20,9 +21,6 @@ interface EvaluatorOutput {
   strength: string;
   nextStep: string;
 }
-
-const MODEL = 'claude-haiku-4-5-20251001';
-const MAX_TOKENS = 800;
 
 export async function POST(req: Request) {
   if (!process.env.ANTHROPIC_API_KEY) {
@@ -80,8 +78,8 @@ export async function POST(req: Request) {
   let raw = '';
   try {
     const message = await client.messages.create({
-      model: MODEL,
-      max_tokens: MAX_TOKENS,
+      model: CLAUDE_MODELS.evaluator,
+      max_tokens: EVALUATOR.maxResponseTokens,
       system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],
     });
