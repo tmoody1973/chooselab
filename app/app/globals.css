@@ -421,7 +421,30 @@ body {
   color: var(--ink-faded);
 }
 
-.storyteller-skip {
+.storyteller-cue {
+  text-align: center;
+  font-size: 16px;
+  color: var(--ink);
+  background: rgba(184, 92, 45, 0.08);
+  border: 1.5px solid var(--accent-warm);
+  border-radius: 12px;
+  padding: 14px 18px;
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+.storyteller-cue strong {
+  color: var(--accent-warm);
+}
+
+.storyteller-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.storyteller-skip,
+.storyteller-reset {
   font-family: inherit;
   background: transparent;
   border: none;
@@ -433,7 +456,8 @@ body {
   text-underline-offset: 4px;
 }
 
-.storyteller-skip:hover {
+.storyteller-skip:hover,
+.storyteller-reset:hover {
   color: var(--ink);
 }
 

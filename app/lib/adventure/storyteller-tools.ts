@@ -19,12 +19,12 @@ export const STORYTELLER_TOOL_DEFINITIONS = [
     type: 'client_event' as const,
     name: 'set_setting',
     description:
-      'CRITICAL TOOL — call this on the FIRST hint of the visitor naming a place. Do NOT ask "is that your final answer?" Do NOT repeat their answer back. Do NOT say "let me confirm." The MOMENT you hear them say anything resembling forest/woods/trees → call set_setting with id "enchanted-forest". The MOMENT you hear ocean/sea/water/underwater/fish → call with id "underwater-kingdom". The MOMENT you hear sky/clouds/stars/village/up high → call with id "sky-village". After calling, briefly say "OK, [place]!" and move STRAIGHT to the next question. Calling this tool IS your acknowledgement — they do not need a second confirmation. If they say something off-list (candy land, space, dinosaur planet), respond warmly with "Ooh! Of our three places — forest, underwater, or sky — which feels closest?" and call the tool on their NEXT answer.',
+      'CRITICAL TIMING RULE: do NOT call this tool when YOU yourself are listing the three options to the visitor. Only call it AFTER the visitor speaks and identifies their pick. Wait for the visitor to respond. When the VISITOR says forest/woods/trees → call with id enchanted-forest. When the VISITOR says ocean/sea/water/underwater → call with id underwater-kingdom. When the VISITOR says sky/clouds/stars/up high → call with id sky-village. After calling once, briefly affirm ("OK, [place]!") and move on to the hero question. Do NOT call this tool a second time on the same conversation turn. Do NOT call this tool when YOU restate the options. Only call once per visitor pick.',
     parameters: [
       {
         type: 'string' as const,
         name: 'id',
-        description: 'enchanted-forest for forest/trees/woods/magical/jungle. underwater-kingdom for ocean/sea/water/fish/coral/underwater. sky-village for sky/clouds/stars/village/up high/floating.',
+        description: 'enchanted-forest for forest/trees/woods/jungle. underwater-kingdom for ocean/sea/water/fish/coral. sky-village for sky/clouds/stars/up high/floating.',
         enum: settingIds,
       },
     ],
@@ -33,12 +33,12 @@ export const STORYTELLER_TOOL_DEFINITIONS = [
     type: 'client_event' as const,
     name: 'set_hero',
     description:
-      'CRITICAL TOOL — call this on the FIRST hint of the visitor picking a hero. Do NOT ask "are you sure?" Do NOT repeat back. The MOMENT you hear them say anything resembling spider → call with id "shy-spider". The MOMENT you hear otter → call with id "curious-otter". The MOMENT you hear dragon → call with id "gentle-dragon". After calling, briefly say "OK, [hero]!" and move STRAIGHT to the next question. Calling the tool IS your acknowledgement. If they say something off-list (unicorn, rabbit, dinosaur), respond warmly with "Ooh! Out of our three — the shy spider, the curious otter, or the gentle dragon — who feels closest?" and call the tool on their NEXT answer.',
+      'CRITICAL TIMING RULE: do NOT call this tool when YOU yourself are listing the three hero options. Only call it AFTER the visitor speaks and picks a hero. Wait for the visitor to respond. When the VISITOR says spider → call with id shy-spider. When the VISITOR says otter → call with id curious-otter. When the VISITOR says dragon → call with id gentle-dragon. After calling once, briefly affirm and move on to the problem question. Do NOT call this tool a second time on the same conversation turn. Do NOT call this tool when YOU restate the options. Only call once per visitor pick.',
     parameters: [
       {
         type: 'string' as const,
         name: 'id',
-        description: 'shy-spider for spider/shy/small/eight-legs. curious-otter for otter/curious/explorer/discovering. gentle-dragon for dragon/gentle/reader/books/scaly.',
+        description: 'shy-spider for spider/shy/small. curious-otter for otter/curious/explorer. gentle-dragon for dragon/gentle/reader/books.',
         enum: heroIds,
       },
     ],
@@ -47,12 +47,12 @@ export const STORYTELLER_TOOL_DEFINITIONS = [
     type: 'client_event' as const,
     name: 'set_problem',
     description:
-      'CRITICAL TOOL — call this on the FIRST hint of the visitor picking a challenge. Do NOT ask "is that the one?" Do NOT repeat back. The MOMENT you hear them say anything resembling lost/home/finding the way back → call with id "lost-in-woods". The MOMENT you hear friend/lonely/want a friend → call with id "making-first-friend". The MOMENT you hear missing/lost item/looking for something → call with id "something-missing". After calling, say "Great choices, hold on while I start painting the first scene of your adventure" and stop talking. Calling the tool IS your acknowledgement.',
+      'CRITICAL TIMING RULE: do NOT call this tool when YOU yourself are listing the three problem options. Only call it AFTER the visitor speaks and picks a challenge. Wait for the visitor to respond. When the VISITOR says lost/home/finding the way → call with id lost-in-woods. When the VISITOR says friend/lonely/want a friend → call with id making-first-friend. When the VISITOR says missing/lost item/looking for → call with id something-missing. After calling once, say "Great choices, hold on while I start painting your adventure" and stop talking. Do NOT call this tool a second time on the same turn. Do NOT call when YOU restate the options.',
     parameters: [
       {
         type: 'string' as const,
         name: 'id',
-        description: 'lost-in-woods for lost/home/finding the way/getting back. making-first-friend for friend/lonely/wants a friend/no friends. something-missing for missing/lost item/searching/looking for/gone.',
+        description: 'lost-in-woods for lost/home/finding the way. making-first-friend for friend/lonely/no friends. something-missing for missing/lost item/searching/gone.',
         enum: problemIds,
       },
     ],

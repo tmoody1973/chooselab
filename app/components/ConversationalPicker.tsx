@@ -167,6 +167,10 @@ function ConversationalSession({
 
       <SeedListener
         onSetSetting={(id) => {
+          // Defensive lock: ignore fires after this pick is already set.
+          // Lyra sometimes fires the tool when SHE lists the options, before
+          // the kid actually answers. Lock the first fire and ignore the rest.
+          if (seedRef.current.setting) return;
           const setting = getSettingById(id);
           if (!setting) return;
           const next = { ...seedRef.current, setting };
@@ -174,6 +178,7 @@ function ConversationalSession({
           tryStart(next);
         }}
         onSetHero={(id) => {
+          if (seedRef.current.hero) return;
           const hero = getHeroById(id);
           if (!hero) return;
           const next = { ...seedRef.current, hero };
@@ -181,6 +186,7 @@ function ConversationalSession({
           tryStart(next);
         }}
         onSetProblem={(id) => {
+          if (seedRef.current.problem) return;
           const problem = getProblemById(id);
           if (!problem) return;
           const next = { ...seedRef.current, problem };
@@ -191,6 +197,7 @@ function ConversationalSession({
       <SeedProgress
         seed={seed}
         onSwitchToManual={onSwitchToManual}
+        onReset={() => setSeed({})}
       />
     </AvatarCall>
   );
@@ -231,20 +238,33 @@ function SeedListener({
 function SeedProgress({
   seed,
   onSwitchToManual,
+  onReset,
 }: {
   seed: { setting?: Setting; hero?: Hero; problem?: Problem };
   onSwitchToManual: () => void;
+  onReset: () => void;
 }) {
+  const anyPicked = seed.setting || seed.hero || seed.problem;
   return (
     <div className="storyteller-progress">
+      <p className="storyteller-cue">
+        🎤 <strong>Tap the mic in the controls below and say &quot;Hi Lyra!&quot;</strong> to begin. Then answer her three questions out loud.
+      </p>
       <div className="storyteller-progress-row">
         <ProgressPill label="Where" picked={seed.setting?.label} />
         <ProgressPill label="Who" picked={seed.hero?.label} />
         <ProgressPill label="What" picked={seed.problem?.label} />
       </div>
-      <button type="button" className="storyteller-skip" onClick={onSwitchToManual}>
-        Skip — let me pick from a list instead
-      </button>
+      <div className="storyteller-actions">
+        {anyPicked ? (
+          <button type="button" className="storyteller-reset" onClick={onReset}>
+            ↺ Start over
+          </button>
+        ) : null}
+        <button type="button" className="storyteller-skip" onClick={onSwitchToManual}>
+          Skip — let me pick from a list instead
+        </button>
+      </div>
     </div>
   );
 }
