@@ -19,6 +19,7 @@ import {
   getProblemById,
 } from '@/lib/adventure/catalog';
 import { Picker } from '@/components/Picker';
+import { StorytellerDebug } from '@/components/StorytellerDebug';
 
 // Client-side tool definitions — typed wrappers around the server-shape definitions
 // in lib/adventure/storyteller-tools.ts. The clientTool helper imports
@@ -135,10 +136,16 @@ function ConversationalSession({
   const seedRef = useRef(seed);
   seedRef.current = seed;
 
-  // Track whether the kid has actually spoken. Tool fires before this is
-  // true are ignored — Lyra sometimes fires set_setting / set_hero on her
-  // OWN list-of-options speech before the kid has had a chance to answer.
-  const userHasSpokenRef = useRef(false);
+  // One-tool-per-user-utterance gate: each tool fire requires a NEW final
+  // user transcription since the last tool fire. Without this gate, Lyra
+  // fires multiple tools during her own list-of-options speech and the
+  // picker auto-advances without the kid actually answering.
+  //
+  // Counter increments on each FINAL user transcription. Tool fires record
+  // the counter value at fire-time. The next fire is dropped unless the
+  // counter has incremented past the last fire's value.
+  const userFinalUtteranceCountRef = useRef(0);
+  const lastToolFireCountRef = useRef(-1);
 
   const tryStart = useCallback(
     (latest: { setting?: Setting; hero?: Hero; problem?: Problem }) => {
@@ -171,45 +178,55 @@ function ConversationalSession({
       <UserVideo />
       <ControlBar showCamera={false} showScreenShare={false} />
 
-      <UserSpeechSentinel onUserSpoke={() => { userHasSpokenRef.current = true; }} />
+      <UserSpeechSentinel
+        onUserFinalUtterance={() => {
+          userFinalUtteranceCountRef.current += 1;
+          console.debug('[picker] user final utterance', userFinalUtteranceCountRef.current);
+        }}
+      />
 
       <SeedListener
         onSetSetting={(id) => {
-          // Two-layer defense:
-          //  1. Drop the fire if the kid hasn't spoken at all yet (Lyra fires
-          //     this tool on her own opening list-of-options speech).
-          //  2. Lock once filled — ignore subsequent fires of the same tool.
-          if (!userHasSpokenRef.current) {
-            console.warn('[picker] dropped set_setting fire — user has not spoken yet');
+          if (!gateAllowsToolFire(userFinalUtteranceCountRef, lastToolFireCountRef, 'set_setting')) {
             return;
           }
-          if (seedRef.current.setting) return;
+          if (seedRef.current.setting) {
+            console.warn('[picker] dropped set_setting — already set');
+            return;
+          }
           const setting = getSettingById(id);
           if (!setting) return;
+          lastToolFireCountRef.current = userFinalUtteranceCountRef.current;
           const next = { ...seedRef.current, setting };
           setSeed(next);
           tryStart(next);
         }}
         onSetHero={(id) => {
-          if (!userHasSpokenRef.current) {
-            console.warn('[picker] dropped set_hero fire — user has not spoken yet');
+          if (!gateAllowsToolFire(userFinalUtteranceCountRef, lastToolFireCountRef, 'set_hero')) {
             return;
           }
-          if (seedRef.current.hero) return;
+          if (seedRef.current.hero) {
+            console.warn('[picker] dropped set_hero — already set');
+            return;
+          }
           const hero = getHeroById(id);
           if (!hero) return;
+          lastToolFireCountRef.current = userFinalUtteranceCountRef.current;
           const next = { ...seedRef.current, hero };
           setSeed(next);
           tryStart(next);
         }}
         onSetProblem={(id) => {
-          if (!userHasSpokenRef.current) {
-            console.warn('[picker] dropped set_problem fire — user has not spoken yet');
+          if (!gateAllowsToolFire(userFinalUtteranceCountRef, lastToolFireCountRef, 'set_problem')) {
             return;
           }
-          if (seedRef.current.problem) return;
+          if (seedRef.current.problem) {
+            console.warn('[picker] dropped set_problem — already set');
+            return;
+          }
           const problem = getProblemById(id);
           if (!problem) return;
+          lastToolFireCountRef.current = userFinalUtteranceCountRef.current;
           const next = { ...seedRef.current, problem };
           setSeed(next);
           tryStart(next);
@@ -220,6 +237,8 @@ function ConversationalSession({
         onSwitchToManual={onSwitchToManual}
         onReset={() => setSeed({})}
       />
+
+      <StorytellerDebug />
     </AvatarCall>
   );
 }
@@ -235,24 +254,42 @@ function LyraStage() {
   );
 }
 
-function UserSpeechSentinel({ onUserSpoke }: { onUserSpoke: () => void }) {
-  // Listens for transcription segments from any participant whose identity
-  // does NOT include 'avatar' or 'agent' — that's the kid. The first time
-  // we see kid-side speech, fire the callback (it just flips a ref to true).
+function UserSpeechSentinel({ onUserFinalUtterance }: { onUserFinalUtterance: () => void }) {
+  // Listens for FINAL transcription segments from the user (not the avatar).
+  // Each final user utterance increments a counter that gates tool fires —
+  // tools can only fire once per new utterance, preventing Lyra from
+  // mass-firing tools during her own list-of-options speech.
   useTranscription(
     (entry) => {
-      const identity = entry.participantIdentity ?? '';
+      if (!entry.final) return;
+      const identity = (entry.participantIdentity ?? '').toLowerCase();
       const isAvatar =
-        identity.toLowerCase().includes('avatar') ||
-        identity.toLowerCase().includes('agent') ||
-        identity.toLowerCase().includes('lyra');
+        identity.includes('avatar') ||
+        identity.includes('agent') ||
+        identity.includes('lyra');
       if (!isAvatar) {
-        onUserSpoke();
+        onUserFinalUtterance();
       }
     },
-    { interim: true }
+    { interim: false }
   );
   return null;
+}
+
+function gateAllowsToolFire(
+  userFinalCountRef: React.RefObject<number>,
+  lastFireCountRef: React.RefObject<number>,
+  toolName: string
+): boolean {
+  const userCount = userFinalCountRef.current ?? 0;
+  const lastFire = lastFireCountRef.current ?? -1;
+  if (userCount <= lastFire) {
+    console.warn(
+      `[picker] dropped ${toolName} — no new user utterance since last tool fire (user=${userCount}, lastFire=${lastFire})`
+    );
+    return false;
+  }
+  return true;
 }
 
 function SeedListener({
