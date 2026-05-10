@@ -56,7 +56,10 @@ export const VISUAL_STYLE = {
 } as const;
 
 export const STORY_GUIDE = {
-  voicePresetId: 'clara',
+  /** Voice preset for the narrator (TTS via eleven_multilingual_v2). Picks a warm, storytelling-friendly voice. */
+  voicePresetId: 'Eleanor',
+  /** Realtime avatar voice (gwm1_avatars uses different preset names than TTS). */
+  realtimeVoicePresetId: 'clara',
   fallbackName: 'Lyra',
   defaultGreeting:
     "Hi! I'm your story buddy. We're going to make an adventure together. Click a setting, a hero, and a problem when you're ready.",
