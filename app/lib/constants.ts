@@ -24,13 +24,35 @@ export const TIMEOUTS_MS = {
 export const RUNWAY_API_VERSION = '2024-11-06';
 
 export const ADVENTURE = {
-  panelImageRatio: '1920:1080',
-  titleImageRatio: '1920:1080',
+  panelImageRatio: '1344:768',
+  titleImageRatio: '1344:768',
   climaxVideoRatio: '1280:720',
   climaxVideoDurationSeconds: 5,
   ambientSoundDurationSeconds: 8,
   panelDepth: 5,
   branchesPerChoice: 3,
+} as const;
+
+/**
+ * Single source of truth for the visual aesthetic across every image
+ * generated for ChooseLab — title illustrations, panel illustrations,
+ * bookshelf covers. Always appended to the prompt for gemini_image3_pro
+ * so the look stays coherent across calls.
+ */
+export const VISUAL_STYLE = {
+  aesthetic:
+    'Watercolor and ink storybook illustration with visible pencil sketch lines underneath the wash, soft loose color washes, gentle paper texture, warm earthy palette. Hand-painted picture-book feel, not digital, not photorealistic. Cozy, warm, gentle mood appropriate for a young audience.',
+  technicalDirectives:
+    'Soft edges, organic ink line work showing through the wash, slight bleed at color boundaries, off-white paper background, warm sunlight color grading. Composition is calm and uncluttered.',
+  doNot: [
+    'no photorealism',
+    'no glossy or 3D-rendered look',
+    'no harsh outlines or vector-art flatness',
+    'no anime style',
+    'no scary or intense expressions',
+    'no exaggerated cartoon proportions',
+    'no real public figures',
+  ],
 } as const;
 
 export const STORY_GUIDE = {
