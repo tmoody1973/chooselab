@@ -19,12 +19,12 @@ export const STORYTELLER_TOOL_DEFINITIONS = [
     type: 'client_event' as const,
     name: 'set_setting',
     description:
-      'Fire IMMEDIATELY when the visitor tells you where they want the adventure to happen. Ask them to choose between three places: an enchanted forest (id: enchanted-forest), an underwater kingdom (id: underwater-kingdom), or a sky village made of clouds (id: sky-village). When they answer, fire this tool with the matching id. If they say something off-list ("a candy land!"), reflect warmly and ask them which of the three places feels closest to their idea, then fire with the matching id. Do not wait for confirmation — fire as soon as you identify their pick.',
+      'CRITICAL TOOL — call this on the FIRST hint of the visitor naming a place. Do NOT ask "is that your final answer?" Do NOT repeat their answer back. Do NOT say "let me confirm." The MOMENT you hear them say anything resembling forest/woods/trees → call set_setting with id "enchanted-forest". The MOMENT you hear ocean/sea/water/underwater/fish → call with id "underwater-kingdom". The MOMENT you hear sky/clouds/stars/village/up high → call with id "sky-village". After calling, briefly say "OK, [place]!" and move STRAIGHT to the next question. Calling this tool IS your acknowledgement — they do not need a second confirmation. If they say something off-list (candy land, space, dinosaur planet), respond warmly with "Ooh! Of our three places — forest, underwater, or sky — which feels closest?" and call the tool on their NEXT answer.',
     parameters: [
       {
         type: 'string' as const,
         name: 'id',
-        description: 'The setting id the visitor picked. enchanted-forest if they said forest/trees/woods. underwater-kingdom if they said ocean/sea/water/fish. sky-village if they said sky/clouds/stars/up high.',
+        description: 'enchanted-forest for forest/trees/woods/magical/jungle. underwater-kingdom for ocean/sea/water/fish/coral/underwater. sky-village for sky/clouds/stars/village/up high/floating.',
         enum: settingIds,
       },
     ],
@@ -33,12 +33,12 @@ export const STORYTELLER_TOOL_DEFINITIONS = [
     type: 'client_event' as const,
     name: 'set_hero',
     description:
-      'Fire IMMEDIATELY when the visitor tells you who the hero of the adventure should be. Ask them to choose between three heroes: a shy spider who wishes for a friend (id: shy-spider), a curious otter who loves discovering things (id: curious-otter), or a gentle dragon who is happiest when reading (id: gentle-dragon). When they answer, fire this tool with the matching id. If they suggest something off-list, reflect warmly and ask which of the three feels closest. Do not wait for confirmation — fire as soon as you identify their pick.',
+      'CRITICAL TOOL — call this on the FIRST hint of the visitor picking a hero. Do NOT ask "are you sure?" Do NOT repeat back. The MOMENT you hear them say anything resembling spider → call with id "shy-spider". The MOMENT you hear otter → call with id "curious-otter". The MOMENT you hear dragon → call with id "gentle-dragon". After calling, briefly say "OK, [hero]!" and move STRAIGHT to the next question. Calling the tool IS your acknowledgement. If they say something off-list (unicorn, rabbit, dinosaur), respond warmly with "Ooh! Out of our three — the shy spider, the curious otter, or the gentle dragon — who feels closest?" and call the tool on their NEXT answer.',
     parameters: [
       {
         type: 'string' as const,
         name: 'id',
-        description: 'The hero id. shy-spider if they said spider/shy/small. curious-otter if they said otter/curious/discoverer. gentle-dragon if they said dragon/gentle/reader/books.',
+        description: 'shy-spider for spider/shy/small/eight-legs. curious-otter for otter/curious/explorer/discovering. gentle-dragon for dragon/gentle/reader/books/scaly.',
         enum: heroIds,
       },
     ],
@@ -47,12 +47,12 @@ export const STORYTELLER_TOOL_DEFINITIONS = [
     type: 'client_event' as const,
     name: 'set_problem',
     description:
-      'Fire IMMEDIATELY when the visitor tells you what challenge the hero will face. Ask them to choose between three challenges: lost and trying to find the way home (id: lost-in-woods), wanting to make a first friend (id: making-first-friend), or looking for something important that has gone missing (id: something-missing). When they answer, fire this tool with the matching id. If they suggest something off-list, reflect warmly and ask which of the three feels closest. Do not wait for confirmation — fire as soon as you identify their pick.',
+      'CRITICAL TOOL — call this on the FIRST hint of the visitor picking a challenge. Do NOT ask "is that the one?" Do NOT repeat back. The MOMENT you hear them say anything resembling lost/home/finding the way back → call with id "lost-in-woods". The MOMENT you hear friend/lonely/want a friend → call with id "making-first-friend". The MOMENT you hear missing/lost item/looking for something → call with id "something-missing". After calling, say "Great choices, hold on while I start painting the first scene of your adventure" and stop talking. Calling the tool IS your acknowledgement.',
     parameters: [
       {
         type: 'string' as const,
         name: 'id',
-        description: 'The problem id. lost-in-woods if they said lost/home/way back. making-first-friend if they said friend/lonely. something-missing if they said missing/lost item/looking for.',
+        description: 'lost-in-woods for lost/home/finding the way/getting back. making-first-friend for friend/lonely/wants a friend/no friends. something-missing for missing/lost item/searching/looking for/gone.',
         enum: problemIds,
       },
     ],

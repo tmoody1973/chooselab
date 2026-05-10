@@ -14,7 +14,7 @@ import { addBookToShelf, buildBookshelfEntry } from '@/lib/adventure/bookshelf';
 type RunnerStage =
   | { kind: 'starting' }
   | { kind: 'rendering-panel'; panelIndex: number }
-  | { kind: 'reading'; panel: PanelData }
+  | { kind: 'reading'; panel: PanelData; assetsReady: boolean }
   | { kind: 'saving' }
   | { kind: 'finished'; coverUrl: string }
   | { kind: 'error'; message: string };
@@ -32,9 +32,10 @@ export function AdventureRunner({ seed, onExit }: AdventureRunnerProps) {
 
   const renderPanel = useCallback(async (arc: StoryArc, panelIndex: number) => {
     setStage({ kind: 'rendering-panel', panelIndex });
-    setStatusLine(panelIndex === 1 ? 'Painting the first scene...' : 'Painting what happens next...');
+    setStatusLine(panelIndex === 1 ? 'Imagining the first scene...' : 'Imagining what happens next...');
 
     try {
+      // Phase 1: Sonnet panel writer (~5-10s). Text + thought-bubble + choices ready.
       const panelRes = await fetch('/api/adventure/panel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -51,7 +52,22 @@ export function AdventureRunner({ seed, onExit }: AdventureRunnerProps) {
       const panelData: PanelData = panelPayload.panelData;
       const assetPrompts = panelPayload.assetPrompts;
 
-      setStatusLine('Painting the picture, recording the sounds...');
+      // PROGRESSIVE REVEAL: show text + choices NOW, while assets are still painting.
+      const initialPanelData: PanelData = {
+        ...panelData,
+        imageUrl: '',
+        ambientSoundUrl: '',
+        narrationAudioUrl: '',
+      };
+      setStage({ kind: 'reading', panel: initialPanelData, assetsReady: false });
+
+      const session = sessionRef.current;
+      if (session) {
+        session.panelHistory.push(initialPanelData);
+        session.currentPanelIndex = panelIndex;
+      }
+
+      // Phase 2: assets (~30-60s). Image, ambient, narration in parallel.
       const isClimax = panelData.isClimax;
       const assetsRes = await fetch('/api/adventure/assets', {
         method: 'POST',
@@ -76,13 +92,12 @@ export function AdventureRunner({ seed, onExit }: AdventureRunnerProps) {
         videoUrl: assets.videoUrl,
       };
 
-      const session = sessionRef.current;
+      // Update the stored panel with the asset URLs
       if (session) {
-        session.panelHistory.push(fullPanelData);
-        session.currentPanelIndex = panelIndex;
+        session.panelHistory[session.panelHistory.length - 1] = fullPanelData;
       }
 
-      setStage({ kind: 'reading', panel: fullPanelData });
+      setStage({ kind: 'reading', panel: fullPanelData, assetsReady: true });
     } catch (err) {
       console.error('Panel rendering failed:', err);
       setStage({
@@ -213,6 +228,7 @@ export function AdventureRunner({ seed, onExit }: AdventureRunnerProps) {
       panel={stage.panel}
       heroName={session.arc.hero.name}
       isFinalPanel={isFinalPanel}
+      assetsReady={stage.assetsReady}
       onChoose={handleChoice}
       onFinish={handleFinish}
     />
