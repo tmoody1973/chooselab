@@ -44,7 +44,8 @@ export interface StoryArc {
   title: string;
   hero: {
     name: string;
-    visualDescription: string;
+    /** 2-sentence visual description repeated verbatim in every image prompt to lock character consistency. */
+    appearanceLock: string;
     voiceTrait: string;
   };
   worldDescription: string;
