@@ -34,7 +34,7 @@ export async function POST(req: Request) {
       systemPrompt: buildArchitectSystemPrompt(),
       userPrompt: buildArchitectUserPrompt(body.seed),
       architectMode: true,
-      maxTokens: 1200,
+      maxTokens: 3000,
     });
   } catch (err) {
     console.error('Story architect failed:', err);

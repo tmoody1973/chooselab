@@ -51,7 +51,7 @@ export async function POST(req: Request) {
         isFinalPanel,
       }),
       architectMode: false,
-      maxTokens: 1500,
+      maxTokens: 2500,
     });
   } catch (err) {
     console.error(`Panel ${body.panelIndex} writer failed:`, err);
