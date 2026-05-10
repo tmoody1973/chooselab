@@ -25,6 +25,11 @@ interface Feedback {
   empty?: boolean;
 }
 
+interface ReplayLens {
+  videoUrl: string;
+  fallback: boolean;
+}
+
 type Stage = 'idle' | 'creating' | 'live' | 'evaluating' | 'feedback' | 'error';
 
 export default function Home() {
@@ -32,6 +37,8 @@ export default function Home() {
   const [session, setSession] = useState<SessionInfo | null>(null);
   const [stage, setStage] = useState<Stage>('idle');
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [replayLens, setReplayLens] = useState<ReplayLens | null>(null);
+  const [replayLensLoading, setReplayLensLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const transcriptRef = useRef<TranscriptionEntry[]>([]);
@@ -44,8 +51,31 @@ export default function Home() {
     setSession(null);
     setStage('idle');
     setFeedback(null);
+    setReplayLens(null);
+    setReplayLensLoading(false);
     setErrorMessage(null);
     transcriptRef.current = [];
+  }, []);
+
+  const fetchReplayLens = useCallback(async (scenario: Scenario) => {
+    setReplayLensLoading(true);
+    try {
+      const res = await fetch('/api/replay-lens', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scenarioId: scenario.scenarioId }),
+      });
+      if (!res.ok) {
+        throw new Error(`Replay Lens failed: ${res.status}`);
+      }
+      const data: ReplayLens = await res.json();
+      setReplayLens(data);
+    } catch (err) {
+      console.error('Replay Lens failed:', err);
+      // Soft-fail: leave replayLens null. Feedback panel still shows strength + nextStep.
+    } finally {
+      setReplayLensLoading(false);
+    }
   }, []);
 
   const evaluate = useCallback(async (scenario: Scenario) => {
@@ -66,12 +96,17 @@ export default function Home() {
       const data: Feedback = await res.json();
       setFeedback(data);
       setStage('feedback');
+      // Kick off Replay Lens generation in parallel (no await) — feedback shows immediately,
+      // video appears underneath when ready (~30-90s on live API, instant on fallback).
+      if (!data.empty) {
+        void fetchReplayLens(scenario);
+      }
     } catch (err) {
       console.error('Evaluation failed:', err);
       setErrorMessage(err instanceof Error ? err.message : 'Evaluation failed');
       setStage('error');
     }
-  }, []);
+  }, [fetchReplayLens]);
 
   const handleSessionEnd = useCallback(() => {
     setSession(null);
@@ -204,6 +239,8 @@ export default function Home() {
               <FeedbackPanel
                 feedback={feedback}
                 scenario={activeScenario}
+                replayLens={replayLens}
+                replayLensLoading={replayLensLoading}
                 onTryAgain={() => startCall(activeScenario)}
                 onDone={closeAll}
               />
@@ -241,11 +278,15 @@ export default function Home() {
 function FeedbackPanel({
   feedback,
   scenario,
+  replayLens,
+  replayLensLoading,
   onTryAgain,
   onDone,
 }: {
   feedback: Feedback;
   scenario: Scenario;
+  replayLens: ReplayLens | null;
+  replayLensLoading: boolean;
   onTryAgain: () => void;
   onDone: () => void;
 }) {
@@ -280,6 +321,26 @@ function FeedbackPanel({
         <span className="feedback-label">One thing to try next</span>
         <p className="feedback-body">{feedback.nextStep}</p>
       </div>
+
+      <div className="replay-lens">
+        <span className="feedback-label">Replay Lens · one alternative</span>
+        {replayLens ? (
+          <video
+            className="replay-lens-video"
+            src={replayLens.videoUrl}
+            autoPlay
+            muted
+            loop
+            playsInline
+            controls
+          />
+        ) : replayLensLoading ? (
+          <div className="replay-lens-loading">
+            Generating one alternative supportive response...
+          </div>
+        ) : null}
+      </div>
+
       <details className="feedback-details">
         <summary>See per-dimension scores</summary>
         <table className="feedback-scores">

@@ -356,6 +356,43 @@ body {
   line-height: 1.5;
 }
 
+.replay-lens {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+  padding-top: 4px;
+}
+
+.replay-lens-video {
+  width: 100%;
+  border-radius: 10px;
+  background: #000;
+  aspect-ratio: 16 / 9;
+  display: block;
+}
+
+.replay-lens-loading {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+  background-size: 200% 100%;
+  animation: replay-shimmer 2.4s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  text-align: center;
+  padding: 24px;
+}
+
+@keyframes replay-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .feedback-details {
   border-top: 1px solid var(--border);
   padding-top: 16px;
